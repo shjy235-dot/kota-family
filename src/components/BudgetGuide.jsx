@@ -9,7 +9,6 @@ function BudgetGuide() {
     expenses, updateExpenses, 
     budgetStatic, updateBudgetStatic, 
     exchangeRate, updateExchangeRate, 
-    isManualRate, updateIsManualRate, 
     isAdminMode, isLoading 
   } = useTravel();
 
@@ -19,6 +18,9 @@ function BudgetGuide() {
   // 환율 편집용 로컬 상태
   const [isEditingRate, setIsEditingRate] = useState(false);
   const [tempRate, setTempRate] = useState(exchangeRate);
+
+  // 실시간 환율 조회 전용 로컬 상태
+  const [realTimeRate, setRealTimeRate] = useState(null);
 
   // 미니 계산기용 상태
   const [calcRm, setCalcRm] = useState('');
@@ -39,6 +41,25 @@ function BudgetGuide() {
     setTempRate(exchangeRate);
   }, [exchangeRate]);
 
+  // 실시간 환율 조회 (단순 참고용)
+  useEffect(() => {
+    const fetchRealTimeRate = async () => {
+      try {
+        const res = await fetch('https://api.frankfurter.app/latest?from=MYR&to=KRW');
+        if (res.ok) {
+          const data = await res.json();
+          const rate = data.rates.KRW;
+          if (rate) {
+            setRealTimeRate(Math.round(rate * 100) / 100);
+          }
+        }
+      } catch (err) {
+        console.error("실시간 환율 조회 실패:", err);
+      }
+    };
+    fetchRealTimeRate();
+  }, []);
+
   const handleBaseSave = () => {
     setIsEditingBase(false);
     updateBaseAmount(tempBaseAmount);
@@ -48,26 +69,6 @@ function BudgetGuide() {
     setIsEditingRate(false);
     const parsedRate = parseFloat(tempRate) || 360;
     updateExchangeRate(parsedRate);
-    updateIsManualRate(true); // 직접 수정했으므로 수동 모드로 전환
-  };
-
-  const handleResetRate = async () => {
-    try {
-      const res = await fetch('https://api.frankfurter.app/latest?from=MYR&to=KRW');
-      if (res.ok) {
-        const data = await res.json();
-        const rate = data.rates.KRW;
-        if (rate) {
-          const roundedRate = Math.round(rate * 100) / 100;
-          await updateExchangeRate(roundedRate);
-          await updateIsManualRate(false);
-          return;
-        }
-      }
-    } catch (err) {
-      console.error("실시간 환율 조회 실패:", err);
-    }
-    await updateIsManualRate(false);
   };
 
   const handleCalcRmChange = (val) => {
@@ -202,18 +203,10 @@ function BudgetGuide() {
           ) : (
             <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
               <strong style={{ fontSize: '1.1rem', color: 'var(--sunset-accent)' }}>{exchangeRate}원</strong>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                ({isManualRate ? '👤 수동 입력됨' : '🕒 실시간 정보'})
+              <button onClick={() => { setTempRate(exchangeRate); setIsEditingRate(true); }} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: 0 }} title="적용 환율 수동 수정"><Edit2 size={14} /></button>
+              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginLeft: '12px', paddingLeft: '12px', borderLeft: '1px solid #ddd' }}>
+                오늘의 실시간 환율 (참고용): <strong>{realTimeRate ? `${realTimeRate}원` : '조회 중...'}</strong>
               </span>
-              <button onClick={() => { setTempRate(exchangeRate); setIsEditingRate(true); }} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: 0 }} title="환율 수동 수정"><Edit2 size={14} /></button>
-              {isManualRate && (
-                <button 
-                  onClick={handleResetRate} 
-                  style={{ background: 'rgba(0,119,182,0.1)', color: 'var(--ocean-accent)', border: 'none', borderRadius: '4px', padding: '3px 8px', fontSize: '0.75rem', cursor: 'pointer', fontWeight: 'bold' }}
-                >
-                  🔄 실시간 환율로 초기화
-                </button>
-              )}
             </div>
           )}
         </div>

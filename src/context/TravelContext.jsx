@@ -26,9 +26,8 @@ export const TravelProvider = ({ children }) => {
   const [flights, setFlights] = useState(travelData.flights);
   const [budgetStatic, setBudgetStatic] = useState(travelData.budget);
 
-  // 환율 상태 추가 (기본값 360원)
+  // 환율 상태 추가 (기본값 360원, DB 연동)
   const [exchangeRate, setExchangeRate] = useState(360);
-  const [isManualRate, setIsManualRate] = useState(false);
 
   const docRef = doc(db, 'trips', 'kota2026');
 
@@ -80,7 +79,6 @@ export const TravelProvider = ({ children }) => {
 
         // 환율 정보 로드 (없으면 기본값 360)
         setExchangeRate(data.exchangeRate !== undefined ? data.exchangeRate : 360);
-        setIsManualRate(data.isManualRate !== undefined ? data.isManualRate : false);
         
         setIsLoading(false);
       } else {
@@ -125,8 +123,7 @@ export const TravelProvider = ({ children }) => {
           diningAndShopping: travelData.diningAndShopping,
           flights: travelData.flights,
           budgetStatic: travelData.budget,
-          exchangeRate: 360,
-          isManualRate: false
+          exchangeRate: 360
         };
 
         await setDoc(docRef, initialData);
@@ -135,33 +132,6 @@ export const TravelProvider = ({ children }) => {
 
     return () => unsubscribe();
   }, []);
-
-  // 실시간 환율 조회 API 연동
-  useEffect(() => {
-    if (isLoading) return;
-    if (isManualRate) return; // 수동 모드일 때는 호출 안함
-
-    const fetchExchangeRate = async () => {
-      try {
-        const res = await fetch('https://api.frankfurter.app/latest?from=MYR&to=KRW');
-        if (res.ok) {
-          const data = await res.json();
-          const rate = data.rates.KRW;
-          if (rate) {
-            const roundedRate = Math.round(rate * 100) / 100;
-            // 현재 저장된 환율과 크게 다를 때만 업데이트 (소수점 2자리 기준 비교)
-            if (Math.abs(roundedRate - exchangeRate) > 0.01) {
-              await updateDoc(docRef, { exchangeRate: roundedRate });
-            }
-          }
-        }
-      } catch (err) {
-        console.error("환율 API 호출 에러, 기존 설정을 유지합니다:", err);
-      }
-    };
-
-    fetchExchangeRate();
-  }, [isLoading, isManualRate]);
 
   // 공통 업데이트 함수
   const updateField = async (field, value) => {
@@ -178,7 +148,6 @@ export const TravelProvider = ({ children }) => {
     else if (field === 'flights') setFlights(value);
     else if (field === 'budgetStatic') setBudgetStatic(value);
     else if (field === 'exchangeRate') setExchangeRate(value);
-    else if (field === 'isManualRate') setIsManualRate(value);
 
     // DB 업데이트
     await updateDoc(docRef, { [field]: value });
@@ -199,7 +168,6 @@ export const TravelProvider = ({ children }) => {
       flights, updateFlights: (v) => updateField('flights', v),
       budgetStatic, updateBudgetStatic: (v) => updateField('budgetStatic', v),
       exchangeRate, updateExchangeRate: (v) => updateField('exchangeRate', v),
-      isManualRate, updateIsManualRate: (v) => updateField('isManualRate', v),
       isLoading
     }}>
       {children}
