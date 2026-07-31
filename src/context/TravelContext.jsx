@@ -8,11 +8,23 @@ const TravelContext = createContext();
 export const useTravel = () => useContext(TravelContext);
 
 export const TravelProvider = ({ children }) => {
+  const [isAdminMode, setIsAdminMode] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // 개별 상태들
   const [checklist, setChecklist] = useState([]);
   const [packing, setPacking] = useState([]);
   const [baseAmount, setBaseAmount] = useState(3480000);
   const [expenses, setExpenses] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+
+  // 추가된 정적 데이터들 (초기값은 travelData.js)
+  const [itinerary, setItinerary] = useState(travelData.itinerary);
+  const [tours, setTours] = useState(travelData.tours);
+  const [tourNotes, setTourNotes] = useState(travelData.tourNotes);
+  const [hotel, setHotel] = useState(travelData.hotel);
+  const [diningAndShopping, setDiningAndShopping] = useState(travelData.diningAndShopping);
+  const [flights, setFlights] = useState(travelData.flights);
+  const [budgetStatic, setBudgetStatic] = useState(travelData.budget);
 
   const docRef = doc(db, 'trips', 'kota2026');
 
@@ -24,6 +36,16 @@ export const TravelProvider = ({ children }) => {
         setPacking(data.packing || []);
         setBaseAmount(data.baseAmount || 3480000);
         setExpenses(data.expenses || []);
+        
+        // 새로 추가된 필드들 (없으면 travelData 기본값 사용)
+        if (data.itinerary) setItinerary(data.itinerary);
+        if (data.tours) setTours(data.tours);
+        if (data.tourNotes) setTourNotes(data.tourNotes);
+        if (data.hotel) setHotel(data.hotel);
+        if (data.diningAndShopping) setDiningAndShopping(data.diningAndShopping);
+        if (data.flights) setFlights(data.flights);
+        if (data.budgetStatic) setBudgetStatic(data.budgetStatic);
+        
         setIsLoading(false);
       } else {
         // 첫 접속 시 초기 데이터(혹은 로컬스토리지 데이터)로 문서 생성
@@ -37,7 +59,6 @@ export const TravelProvider = ({ children }) => {
           }))
         );
         
-        // 로컬 스토리지 마이그레이션 로직
         const savedChecklist = localStorage.getItem('kota_checklist');
         const mergedChecklist = savedChecklist ? initialChecklist.map(defaultItem => {
           const found = JSON.parse(savedChecklist).find(s => s.id === defaultItem.id);
@@ -60,44 +81,56 @@ export const TravelProvider = ({ children }) => {
           checklist: mergedChecklist,
           packing: mergedPacking,
           baseAmount: mergedBase,
-          expenses: mergedExpenses
+          expenses: mergedExpenses,
+          itinerary: travelData.itinerary,
+          tours: travelData.tours,
+          tourNotes: travelData.tourNotes,
+          hotel: travelData.hotel,
+          diningAndShopping: travelData.diningAndShopping,
+          flights: travelData.flights,
+          budgetStatic: travelData.budget
         };
 
         await setDoc(docRef, initialData);
-        // setDoc will trigger onSnapshot again, so we just wait
       }
     });
 
     return () => unsubscribe();
   }, []);
 
-  const updateChecklist = async (newChecklist) => {
-    // 낙관적 업데이트 (UI 즉시 반영)
-    setChecklist(newChecklist);
-    await updateDoc(docRef, { checklist: newChecklist });
-  };
+  // 공통 업데이트 함수
+  const updateField = async (field, value) => {
+    // 로컬 상태 즉시 반영
+    if (field === 'checklist') setChecklist(value);
+    else if (field === 'packing') setPacking(value);
+    else if (field === 'baseAmount') setBaseAmount(value);
+    else if (field === 'expenses') setExpenses(value);
+    else if (field === 'itinerary') setItinerary(value);
+    else if (field === 'tours') setTours(value);
+    else if (field === 'tourNotes') setTourNotes(value);
+    else if (field === 'hotel') setHotel(value);
+    else if (field === 'diningAndShopping') setDiningAndShopping(value);
+    else if (field === 'flights') setFlights(value);
+    else if (field === 'budgetStatic') setBudgetStatic(value);
 
-  const updatePacking = async (newPacking) => {
-    setPacking(newPacking);
-    await updateDoc(docRef, { packing: newPacking });
-  };
-
-  const updateBaseAmount = async (newAmount) => {
-    setBaseAmount(newAmount);
-    await updateDoc(docRef, { baseAmount: newAmount });
-  };
-
-  const updateExpenses = async (newExpenses) => {
-    setExpenses(newExpenses);
-    await updateDoc(docRef, { expenses: newExpenses });
+    // DB 업데이트
+    await updateDoc(docRef, { [field]: value });
   };
 
   return (
     <TravelContext.Provider value={{
-      checklist, updateChecklist,
-      packing, updatePacking,
-      baseAmount, updateBaseAmount,
-      expenses, updateExpenses,
+      isAdminMode, setIsAdminMode,
+      checklist, updateChecklist: (v) => updateField('checklist', v),
+      packing, updatePacking: (v) => updateField('packing', v),
+      baseAmount, updateBaseAmount: (v) => updateField('baseAmount', v),
+      expenses, updateExpenses: (v) => updateField('expenses', v),
+      itinerary, updateItinerary: (v) => updateField('itinerary', v),
+      tours, updateTours: (v) => updateField('tours', v),
+      tourNotes, updateTourNotes: (v) => updateField('tourNotes', v),
+      hotel, updateHotel: (v) => updateField('hotel', v),
+      diningAndShopping, updateDiningAndShopping: (v) => updateField('diningAndShopping', v),
+      flights, updateFlights: (v) => updateField('flights', v),
+      budgetStatic, updateBudgetStatic: (v) => updateField('budgetStatic', v),
       isLoading
     }}>
       {children}

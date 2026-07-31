@@ -4,9 +4,7 @@ import travelData from '../data/travelData';
 import { useTravel } from '../context/TravelContext';
 
 function BudgetGuide() {
-  const { budget } = travelData;
-
-  const { baseAmount, updateBaseAmount, expenses, updateExpenses, isLoading } = useTravel();
+  const { baseAmount, updateBaseAmount, expenses, updateExpenses, budgetStatic, updateBudgetStatic, isAdminMode, isLoading } = useTravel();
   const [isEditingBase, setIsEditingBase] = useState(false);
   const [tempBaseAmount, setTempBaseAmount] = useState(baseAmount);
 
@@ -48,7 +46,7 @@ function BudgetGuide() {
 
   const totalSpent = baseAmount + expensesSumKrw;
 
-  if (!budget) return null;
+  if (!budgetStatic) return null;
 
   const cardStyle = { padding: '14px 12px', marginBottom: '12px' };
 
@@ -164,23 +162,51 @@ function BudgetGuide() {
       <details className="glass-card" style={cardStyle}>
         <summary className="section-title" style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', listStyle: 'none', margin: 0 }}>
           <CreditCard size={18} color="var(--sunset-accent)"/> 
-          <span>사전 결제 예상 (한국)</span>
+          <span>사전 결제 예상 (한국) {isAdminMode && <span style={{fontSize:'0.7rem', color:'var(--sunset-accent)'}}>[수정]</span>}</span>
           <span style={{ marginLeft: 'auto', fontSize: '0.8rem', color: 'var(--text-muted)' }}>자세히 보기 ▼</span>
         </summary>
         <div style={{ marginTop: '12px' }}>
           <p style={{ fontSize: '1rem', fontWeight: 'bold', marginBottom: '10px', color: '#333' }}>
-            총 {budget.prePaid.total}
+            총 {isAdminMode ? <input type="text" value={budgetStatic.prePaid.total} onChange={e => updateBudgetStatic({...budgetStatic, prePaid: {...budgetStatic.prePaid, total: e.target.value}})} style={{padding:'2px'}} onClick={e=>e.stopPropagation()}/> : budgetStatic.prePaid.total}
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {budget.prePaid.items.map((item, idx) => (
+            {budgetStatic.prePaid.items.map((item, idx) => (
               <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid rgba(0,0,0,0.05)', paddingBottom: '6px' }}>
                 <div style={{ flex: 1, paddingRight: '8px' }}>
-                  <div style={{ fontWeight: '600', fontSize: '0.9rem' }}>{item.name}</div>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '2px', lineHeight: '1.2' }}>{item.desc}</div>
+                  <div style={{ fontWeight: '600', fontSize: '0.9rem' }}>
+                    {isAdminMode ? <input type="text" value={item.name} onChange={e => {
+                      const newItems = [...budgetStatic.prePaid.items];
+                      newItems[idx] = { ...item, name: e.target.value };
+                      updateBudgetStatic({...budgetStatic, prePaid: {...budgetStatic.prePaid, items: newItems}});
+                    }} style={{padding:'2px', width:'100%'}}/> : item.name}
+                  </div>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '2px', lineHeight: '1.2' }}>
+                    {isAdminMode ? <input type="text" value={item.desc} onChange={e => {
+                      const newItems = [...budgetStatic.prePaid.items];
+                      newItems[idx] = { ...item, desc: e.target.value };
+                      updateBudgetStatic({...budgetStatic, prePaid: {...budgetStatic.prePaid, items: newItems}});
+                    }} style={{padding:'2px', width:'100%'}}/> : item.desc}
+                  </div>
                 </div>
-                <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: 'var(--ocean-accent)', whiteSpace: 'nowrap' }}>{item.amount}</div>
+                <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: 'var(--ocean-accent)', whiteSpace: 'nowrap' }}>
+                  {isAdminMode ? <input type="text" value={item.amount} onChange={e => {
+                    const newItems = [...budgetStatic.prePaid.items];
+                    newItems[idx] = { ...item, amount: e.target.value };
+                    updateBudgetStatic({...budgetStatic, prePaid: {...budgetStatic.prePaid, items: newItems}});
+                  }} style={{padding:'2px', width:'80px'}}/> : item.amount}
+                  {isAdminMode && <button onClick={() => {
+                    const newItems = [...budgetStatic.prePaid.items];
+                    newItems.splice(idx, 1);
+                    updateBudgetStatic({...budgetStatic, prePaid: {...budgetStatic.prePaid, items: newItems}});
+                  }} style={{ background: '#e76f51', color: 'white', border: 'none', borderRadius: '4px', padding: '2px 4px', marginLeft:'4px' }}>삭제</button>}
+                </div>
               </div>
             ))}
+            {isAdminMode && (
+              <button onClick={() => updateBudgetStatic({...budgetStatic, prePaid: {...budgetStatic.prePaid, items: [...budgetStatic.prePaid.items, {name:'항목', desc:'설명', amount:'0원'}]}})} style={{ padding: '4px', background: 'var(--ocean-accent)', color: 'white', border: 'none', borderRadius: '4px' }}>
+                + 사전 결제 내역 추가
+              </button>
+            )}
           </div>
         </div>
       </details>
@@ -188,45 +214,73 @@ function BudgetGuide() {
       <details className="glass-card" style={cardStyle}>
         <summary className="section-title" style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', listStyle: 'none', margin: 0 }}>
           <Banknote size={18} color="#2a9d8f"/> 
-          <span>현지 지출 예상 (코타키나발루)</span>
+          <span>현지 지출 예상 (코타키나발루) {isAdminMode && <span style={{fontSize:'0.7rem', color:'var(--sunset-accent)'}}>[수정]</span>}</span>
           <span style={{ marginLeft: 'auto', fontSize: '0.8rem', color: 'var(--text-muted)' }}>자세히 보기 ▼</span>
         </summary>
         <div style={{ marginTop: '12px' }}>
           <p style={{ fontSize: '1rem', fontWeight: 'bold', marginBottom: '10px', color: '#333' }}>
-            총 {budget.local.total}
+            총 {isAdminMode ? <input type="text" value={budgetStatic.local.total} onChange={e => updateBudgetStatic({...budgetStatic, local: {...budgetStatic.local, total: e.target.value}})} style={{padding:'2px'}} onClick={e=>e.stopPropagation()}/> : budgetStatic.local.total}
           </p>
 
           {/* 트래블월렛 섹션 */}
           <div style={{ background: 'rgba(42, 157, 143, 0.05)', padding: '10px', borderRadius: '10px', marginBottom: '12px', border: '1px solid rgba(42, 157, 143, 0.2)' }}>
             <h4 style={{ fontSize: '0.9rem', fontWeight: 'bold', color: '#2a9d8f', marginBottom: '2px' }}>
-              {budget.local.travelWallet.title}
+              {isAdminMode ? <input type="text" value={budgetStatic.local.travelWallet.title} onChange={e => updateBudgetStatic({...budgetStatic, local: {...budgetStatic.local, travelWallet: {...budgetStatic.local.travelWallet, title: e.target.value}}})} style={{padding:'2px', width:'100%'}}/> : budgetStatic.local.travelWallet.title}
             </h4>
             <p style={{ fontSize: '1rem', fontWeight: '800', color: 'var(--ocean-accent)', marginBottom: '8px' }}>
-              총 {budget.local.travelWallet.total}
+              총 {isAdminMode ? <input type="text" value={budgetStatic.local.travelWallet.total} onChange={e => updateBudgetStatic({...budgetStatic, local: {...budgetStatic.local, travelWallet: {...budgetStatic.local.travelWallet, total: e.target.value}}})} style={{padding:'2px'}}/> : budgetStatic.local.travelWallet.total}
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              {budget.local.travelWallet.items.map((item, idx) => (
+              {budgetStatic.local.travelWallet.items.map((item, idx) => (
                 <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px dashed rgba(0,0,0,0.1)', paddingBottom: '4px' }}>
                   <div style={{ flex: 1, paddingRight: '8px' }}>
-                    <div style={{ fontWeight: '600', fontSize: '0.85rem' }}>{item.name}</div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '1px', lineHeight: '1.2' }}>{item.desc}</div>
+                    <div style={{ fontWeight: '600', fontSize: '0.85rem' }}>
+                      {isAdminMode ? <input type="text" value={item.name} onChange={e => {
+                        const newItems = [...budgetStatic.local.travelWallet.items];
+                        newItems[idx] = { ...item, name: e.target.value };
+                        updateBudgetStatic({...budgetStatic, local: {...budgetStatic.local, travelWallet: {...budgetStatic.local.travelWallet, items: newItems}}});
+                      }} style={{padding:'2px', width:'100%'}}/> : item.name}
+                    </div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '1px', lineHeight: '1.2' }}>
+                      {isAdminMode ? <input type="text" value={item.desc} onChange={e => {
+                        const newItems = [...budgetStatic.local.travelWallet.items];
+                        newItems[idx] = { ...item, desc: e.target.value };
+                        updateBudgetStatic({...budgetStatic, local: {...budgetStatic.local, travelWallet: {...budgetStatic.local.travelWallet, items: newItems}}});
+                      }} style={{padding:'2px', width:'100%'}}/> : item.desc}
+                    </div>
                   </div>
-                  <div style={{ fontWeight: 'bold', fontSize: '0.85rem', color: '#333', whiteSpace: 'nowrap' }}>{item.amount}</div>
+                  <div style={{ fontWeight: 'bold', fontSize: '0.85rem', color: '#333', whiteSpace: 'nowrap' }}>
+                    {isAdminMode ? <input type="text" value={item.amount} onChange={e => {
+                      const newItems = [...budgetStatic.local.travelWallet.items];
+                      newItems[idx] = { ...item, amount: e.target.value };
+                      updateBudgetStatic({...budgetStatic, local: {...budgetStatic.local, travelWallet: {...budgetStatic.local.travelWallet, items: newItems}}});
+                    }} style={{padding:'2px', width:'60px'}}/> : item.amount}
+                    {isAdminMode && <button onClick={() => {
+                      const newItems = [...budgetStatic.local.travelWallet.items];
+                      newItems.splice(idx, 1);
+                      updateBudgetStatic({...budgetStatic, local: {...budgetStatic.local, travelWallet: {...budgetStatic.local.travelWallet, items: newItems}}});
+                    }} style={{ background: '#e76f51', color: 'white', border: 'none', borderRadius: '4px', padding: '2px 4px', marginLeft:'4px' }}>삭제</button>}
+                  </div>
                 </div>
               ))}
+              {isAdminMode && (
+                <button onClick={() => updateBudgetStatic({...budgetStatic, local: {...budgetStatic.local, travelWallet: {...budgetStatic.local.travelWallet, items: [...budgetStatic.local.travelWallet.items, {name:'항목', desc:'설명', amount:'0 RM'}]}}})} style={{ padding: '4px', background: 'var(--ocean-accent)', color: 'white', border: 'none', borderRadius: '4px' }}>
+                  + 항목 추가
+                </button>
+              )}
             </div>
           </div>
 
           {/* 현금 비상금 섹션 */}
           <div style={{ background: 'rgba(255, 183, 3, 0.05)', padding: '10px', borderRadius: '10px', border: '1px solid rgba(255, 183, 3, 0.2)' }}>
             <h4 style={{ fontSize: '0.9rem', fontWeight: 'bold', color: 'var(--sunset-accent)', marginBottom: '2px' }}>
-              {budget.local.cash.title}
+              {budgetStatic.local.cash.title}
             </h4>
             <p style={{ fontSize: '1rem', fontWeight: '800', color: 'var(--ocean-accent)', marginBottom: '8px' }}>
-              총 {budget.local.cash.total}
+              총 {budgetStatic.local.cash.total}
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              {budget.local.cash.items.map((item, idx) => (
+              {budgetStatic.local.cash.items.map((item, idx) => (
                 <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                   <div style={{ flex: 1, paddingRight: '8px' }}>
                     <div style={{ fontWeight: '600', fontSize: '0.85rem' }}>{item.name}</div>

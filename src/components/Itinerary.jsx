@@ -1,31 +1,94 @@
 import React from 'react';
 import { MapPin, Clock, Compass, AlertTriangle } from 'lucide-react';
 import travelData from '../data/travelData';
+import { useTravel } from '../context/TravelContext';
 
 function Itinerary() {
-  const { itinerary, tours, tourNotes } = travelData;
+  const { itinerary, updateItinerary, tours, updateTours, tourNotes, updateTourNotes, isAdminMode } = useTravel();
+
+  const handleItineraryChange = (dayIdx, field, value) => {
+    const newItinerary = [...itinerary];
+    newItinerary[dayIdx] = { ...newItinerary[dayIdx], [field]: value };
+    updateItinerary(newItinerary);
+  };
+
+  const handleScheduleChange = (dayIdx, sIdx, value) => {
+    const newItinerary = [...itinerary];
+    const newSchedule = [...newItinerary[dayIdx].schedule];
+    newSchedule[sIdx] = value;
+    newItinerary[dayIdx].schedule = newSchedule;
+    updateItinerary(newItinerary);
+  };
+
+  const addScheduleItem = (dayIdx) => {
+    const newItinerary = [...itinerary];
+    newItinerary[dayIdx].schedule.push("새로운 일정");
+    updateItinerary(newItinerary);
+  };
+
+  const removeScheduleItem = (dayIdx, sIdx) => {
+    const newItinerary = [...itinerary];
+    newItinerary[dayIdx].schedule.splice(sIdx, 1);
+    updateItinerary(newItinerary);
+  };
 
   return (
     <div className="itinerary">
-      <h2 className="page-title">전체 일정 요약</h2>
+      <h2 className="page-title">전체 일정 요약 {isAdminMode && <span style={{fontSize:'0.8rem', color:'var(--sunset-accent)'}}>[수정 모드]</span>}</h2>
 
       <div className="timeline-container">
         {itinerary.map((dayPlan, idx) => (
-          <div key={idx} className="glass-card" style={{ position: 'relative' }}>
-            <div style={{ position: 'absolute', top: '-10px', left: '-10px', background: 'var(--sunset-accent)', color: 'white', padding: '4px 12px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 'bold' }}>
-              {dayPlan.day}
-            </div>
-            <h3 className="section-title" style={{ marginTop: '10px' }}>
-              <MapPin size={20} color="var(--text-muted)"/> {dayPlan.title}
+          <div key={idx} className="glass-card" style={{ position: 'relative', border: isAdminMode ? '2px dashed var(--sunset-accent)' : 'none', marginBottom: '20px' }}>
+            {isAdminMode ? (
+              <input 
+                type="text" 
+                value={dayPlan.day} 
+                onChange={(e) => handleItineraryChange(idx, 'day', e.target.value)}
+                style={{ position: 'absolute', top: '-10px', left: '-10px', background: 'var(--sunset-accent)', color: 'white', padding: '4px 12px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 'bold', border: 'none' }}
+              />
+            ) : (
+              <div style={{ position: 'absolute', top: '-10px', left: '-10px', background: 'var(--sunset-accent)', color: 'white', padding: '4px 12px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 'bold' }}>
+                {dayPlan.day}
+              </div>
+            )}
+            
+            <h3 className="section-title" style={{ marginTop: isAdminMode ? '20px' : '10px' }}>
+              <MapPin size={20} color="var(--text-muted)"/> 
+              {isAdminMode ? (
+                <input 
+                  type="text" 
+                  value={dayPlan.title} 
+                  onChange={(e) => handleItineraryChange(idx, 'title', e.target.value)}
+                  style={{ width: '80%', padding: '4px', border: '1px solid #ccc', borderRadius: '4px', marginLeft: '8px' }}
+                />
+              ) : (
+                dayPlan.title
+              )}
             </h3>
             
             <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {dayPlan.schedule.map((item, sIdx) => (
                 <div key={sIdx} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
                   <Clock size={16} color="var(--text-muted)" style={{ marginTop: '2px', flexShrink: 0 }}/>
-                  <span style={{ fontSize: '0.9rem', lineHeight: '1.4' }} dangerouslySetInnerHTML={{ __html: item }} />
+                  {isAdminMode ? (
+                    <div style={{ display: 'flex', flex: 1, gap: '8px' }}>
+                      <textarea 
+                        value={item} 
+                        onChange={(e) => handleScheduleChange(idx, sIdx, e.target.value)}
+                        style={{ flex: 1, padding: '4px', border: '1px solid #ccc', borderRadius: '4px', minHeight: '40px', resize: 'vertical' }}
+                      />
+                      <button onClick={() => removeScheduleItem(idx, sIdx)} style={{ background: '#e76f51', color: 'white', border: 'none', borderRadius: '4px', padding: '0 8px' }}>삭제</button>
+                    </div>
+                  ) : (
+                    <span style={{ fontSize: '0.9rem', lineHeight: '1.4' }} dangerouslySetInnerHTML={{ __html: item }} />
+                  )}
                 </div>
               ))}
+              {isAdminMode && (
+                <button onClick={() => addScheduleItem(idx)} style={{ marginTop: '8px', padding: '6px', background: 'var(--ocean-accent)', color: 'white', border: 'none', borderRadius: '4px' }}>
+                  + 세부 일정 추가
+                </button>
+              )}
             </div>
           </div>
         ))}
