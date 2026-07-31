@@ -32,7 +32,16 @@ export const TravelProvider = ({ children }) => {
     const unsubscribe = onSnapshot(docRef, async (docSnap) => {
       if (docSnap.exists()) {
         const data = docSnap.data();
-        setChecklist(data.checklist || []);
+        let currentChecklist = data.checklist || [];
+        // MDAC 링크 강제 업데이트 패치 (기존 사용자 DB 패치용)
+        const mdacItem = currentChecklist.find(item => item.id === 1);
+        if (mdacItem && !mdacItem.task.includes('<a href')) {
+          currentChecklist = currentChecklist.map(item => 
+            item.id === 1 ? { ...item, task: travelData.preTripChecklist.find(t => t.id === 1).task } : item
+          );
+          updateDoc(docRef, { checklist: currentChecklist }); // DB 업데이트
+        }
+        setChecklist(currentChecklist);
         setPacking(data.packing || []);
         setBaseAmount(data.baseAmount || 3480000);
         setExpenses(data.expenses || []);
