@@ -26,13 +26,18 @@ export const TravelProvider = ({ children }) => {
   const [flights, setFlights] = useState(travelData.flights);
   const [budgetStatic, setBudgetStatic] = useState(travelData.budget);
 
+  // 환율 상태 추가 (기본값 360원)
+  const [exchangeRate, setExchangeRate] = useState(360);
+  const [isManualRate, setIsManualRate] = useState(false);
+
   const docRef = doc(db, 'trips', 'kota2026');
 
   useEffect(() => {
     const unsubscribe = onSnapshot(docRef, async (docSnap) => {
       if (docSnap.exists()) {
         const data = docSnap.data();
-        let currentChecklist = data.checklist || [];
+        const dataChecklist = data.checklist || [];
+        let currentChecklist = dataChecklist;
         // MDAC 링크 강제 업데이트 패치 (기존 사용자 DB 패치용)
         const mdacItem = currentChecklist.find(item => item.id === 1);
         if (mdacItem && !mdacItem.task.includes('<a href')) {
@@ -53,6 +58,7 @@ export const TravelProvider = ({ children }) => {
         if (data.hotel) setHotel(data.hotel);
         if (data.diningAndShopping) setDiningAndShopping(data.diningAndShopping);
         if (data.flights) setFlights(data.flights);
+        
         let currentBudget = data.budgetStatic || travelData.budget;
         if (currentBudget?.local?.travelWallet?.title) {
           const title = currentBudget.local.travelWallet.title;
@@ -63,7 +69,7 @@ export const TravelProvider = ({ children }) => {
                 ...currentBudget.local,
                 travelWallet: {
                   ...currentBudget.local.travelWallet,
-                  title: title.replace("트래블월렛", "트레블로그카드").replace("트레블월렛", "트레블로그카드")
+                  title: title.replace("트래블월렛", "트래블로그카드").replace("트레블월렛", "트래블로그카드")
                 }
               }
             };
@@ -71,6 +77,10 @@ export const TravelProvider = ({ children }) => {
           }
         }
         setBudgetStatic(currentBudget);
+
+        // 환율 정보 로드 (없으면 기본값 360)
+        setExchangeRate(data.exchangeRate !== undefined ? data.exchangeRate : 360);
+        setIsManualRate(data.isManualRate !== undefined ? data.isManualRate : false);
         
         setIsLoading(false);
       } else {
@@ -114,7 +124,9 @@ export const TravelProvider = ({ children }) => {
           hotel: travelData.hotel,
           diningAndShopping: travelData.diningAndShopping,
           flights: travelData.flights,
-          budgetStatic: travelData.budget
+          budgetStatic: travelData.budget,
+          exchangeRate: 360,
+          isManualRate: false
         };
 
         await setDoc(docRef, initialData);
@@ -123,6 +135,33 @@ export const TravelProvider = ({ children }) => {
 
     return () => unsubscribe();
   }, []);
+
+  // 실시간 환율 조회 API 연동
+  useEffect(() => {
+    if (isLoading) return;
+    if (isManualRate) return; // 수동 모드일 때는 호출 안함
+
+    const fetchExchangeRate = async () => {
+      try {
+        const res = await fetch('https://api.frankfurter.app/latest?from=MYR&to=KRW');
+        if (res.ok) {
+          const data = await res.json();
+          const rate = data.rates.KRW;
+          if (rate) {
+            const roundedRate = Math.round(rate * 100) / 100;
+            // 현재 저장된 환율과 크게 다를 때만 업데이트 (소수점 2자리 기준 비교)
+            if (Math.abs(roundedRate - exchangeRate) > 0.01) {
+              await updateDoc(docRef, { exchangeRate: roundedRate });
+            }
+          }
+        }
+      } catch (err) {
+        console.error("환율 API 호출 에러, 기존 설정을 유지합니다:", err);
+      }
+    };
+
+    fetchExchangeRate();
+  }, [isLoading, isManualRate]);
 
   // 공통 업데이트 함수
   const updateField = async (field, value) => {
@@ -138,6 +177,8 @@ export const TravelProvider = ({ children }) => {
     else if (field === 'diningAndShopping') setDiningAndShopping(value);
     else if (field === 'flights') setFlights(value);
     else if (field === 'budgetStatic') setBudgetStatic(value);
+    else if (field === 'exchangeRate') setExchangeRate(value);
+    else if (field === 'isManualRate') setIsManualRate(value);
 
     // DB 업데이트
     await updateDoc(docRef, { [field]: value });
@@ -157,6 +198,8 @@ export const TravelProvider = ({ children }) => {
       diningAndShopping, updateDiningAndShopping: (v) => updateField('diningAndShopping', v),
       flights, updateFlights: (v) => updateField('flights', v),
       budgetStatic, updateBudgetStatic: (v) => updateField('budgetStatic', v),
+      exchangeRate, updateExchangeRate: (v) => updateField('exchangeRate', v),
+      isManualRate, updateIsManualRate: (v) => updateField('isManualRate', v),
       isLoading
     }}>
       {children}
