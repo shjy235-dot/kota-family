@@ -54,12 +54,22 @@ function HotelInfo() {
           <Building size={18} color="var(--sunset-accent)"/> 
           {isAdminMode ? (
             <input type="text" value={hotel.name} onChange={e => updateHotel({...hotel, name: e.target.value})} style={{marginLeft: '8px', padding: '4px', border: '1px solid #ccc', borderRadius: '4px'}} />
-          ) : hotel.name}
+          ) : (
+            <span>
+              {hotel.name.split('(')[0]} 
+              {hotel.name.includes('(') && <span style={{ display: 'inline-block' }}>({hotel.name.substring(hotel.name.indexOf('(') + 1)}</span>}
+            </span>
+          )}
         </h3>
         <p style={{ fontWeight: '600', marginBottom: '10px', fontSize: '0.95rem', color: 'var(--ocean-accent)' }}>
           {isAdminMode ? (
             <input type="text" value={hotel.roomType} onChange={e => updateHotel({...hotel, roomType: e.target.value})} style={{width: '100%', padding: '4px', border: '1px solid #ccc', borderRadius: '4px'}} />
-          ) : hotel.roomType}
+          ) : (
+            <span>
+              {hotel.roomType.split('(')[0]} 
+              {hotel.roomType.includes('(') && <span style={{ display: 'inline-block' }}>({hotel.roomType.substring(hotel.roomType.indexOf('(') + 1)}</span>}
+            </span>
+          )}
         </p>
         <ul className="info-list" style={{ paddingLeft: '18px', margin: 0 }}>
           {hotel.benefits.map((benefit, idx) => (
