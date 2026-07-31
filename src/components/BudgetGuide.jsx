@@ -104,19 +104,6 @@ function BudgetGuide() {
     return '';
   };
 
-  // 트래블로그카드 총액 문자열을 실시간 환산하여 반환하는 헬퍼
-  const convertRmTotalToKrwString = (totalStr) => {
-    if (!totalStr) return '';
-    if (totalStr.includes('RM')) {
-      const match = totalStr.match(/^([\d,.]+)\s*RM/i);
-      if (match) {
-        const num = parseFloat(match[1].replace(/,/g, '')) || 0;
-        const krw = Math.round(num * exchangeRate);
-        return `${num.toLocaleString()} RM (약 ${krw.toLocaleString()}원)`;
-      }
-    }
-    return totalStr;
-  };
 
   // "약 2,688,000원", "15~20만 원" 같은 원화 텍스트를 숫자로 환산 (범위는 평균값 사용)
   const parseKrwText = (str) => {
@@ -128,20 +115,18 @@ function BudgetGuide() {
     return hasMan ? avg * 10000 : avg;
   };
 
-  // "2,800 RM" 같은 RM 텍스트에서 숫자만 추출
-  const parseRmText = (str) => {
+  // 항목 금액 문자열에서 숫자만 추출 (합산용)
+  const parseAmountNumber = (str) => {
     if (!str) return 0;
-    const match = str.match(/([\d,.]+)\s*RM/i);
-    return match ? parseFloat(match[1].replace(/,/g, '')) || 0 : 0;
+    const match = str.match(/-?[\d,.]+/);
+    if (!match) return 0;
+    return parseFloat(match[0].replace(/,/g, '')) || 0;
   };
 
   // 항목 금액을 천단위 쉼표 + 단위(원/RM)로 정규화해서 표시
   const formatAmount = (str, unit) => {
-    if (!str) return str;
-    const match = str.match(/-?[\d,.]+/);
-    if (!match) return str;
-    const num = parseFloat(match[0].replace(/,/g, ''));
-    if (isNaN(num)) return str;
+    const num = parseAmountNumber(str);
+    if (!str || isNaN(num)) return str;
     return unit === 'RM' ? `${num.toLocaleString()} RM` : `${num.toLocaleString()}원`;
   };
 
@@ -149,10 +134,11 @@ function BudgetGuide() {
 
   if (!budgetStatic) return null;
 
-  // 사전결제 예상 (한국, 원화)
-  const prePaidKrw = parseKrwText(budgetStatic.prePaid.total);
-  // 현지지출 예상 (트래블로그카드 RM 환산 + 현금 비상금)
-  const localWalletKrw = parseRmText(budgetStatic.local.travelWallet.total) * exchangeRate;
+  // 사전결제 예상 (한국, 원화) - 항목별 금액 합산 (총액 텍스트는 항목 추가 시 갱신되지 않아 항목 합산으로 계산)
+  const prePaidKrw = budgetStatic.prePaid.items.reduce((sum, item) => sum + parseAmountNumber(item.amount), 0);
+  // 현지지출 예상 (트래블로그카드 RM 항목 합산 후 환산 + 현금 비상금)
+  const travelWalletRm = budgetStatic.local.travelWallet.items.reduce((sum, item) => sum + parseAmountNumber(item.amount), 0);
+  const localWalletKrw = travelWalletRm * exchangeRate;
   const localCashKrw = parseKrwText(budgetStatic.local.cash.total);
   const localKrw = localWalletKrw + localCashKrw;
   // 실지출 합산 (RM은 현재 설정된 환율로 환산)
@@ -322,7 +308,7 @@ function BudgetGuide() {
         </summary>
         <div style={{ marginTop: '12px' }}>
           <p style={{ fontSize: '1rem', fontWeight: 'bold', marginBottom: '10px', color: '#333' }}>
-            총 {isAdminMode ? <input type="text" value={budgetStatic.prePaid.total} onChange={e => updateBudgetStatic({...budgetStatic, prePaid: {...budgetStatic.prePaid, total: e.target.value}})} style={{padding:'2px'}} onClick={e=>e.stopPropagation()}/> : budgetStatic.prePaid.total}
+            총 약 {prePaidKrw.toLocaleString()}원
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {budgetStatic.prePaid.items.map((item, idx) => (
@@ -374,7 +360,7 @@ function BudgetGuide() {
         </summary>
         <div style={{ marginTop: '12px' }}>
           <p style={{ fontSize: '1rem', fontWeight: 'bold', marginBottom: '10px', color: '#333' }}>
-            총 {isAdminMode ? <input type="text" value={budgetStatic.local.total} onChange={e => updateBudgetStatic({...budgetStatic, local: {...budgetStatic.local, total: e.target.value}})} style={{padding:'2px'}} onClick={e=>e.stopPropagation()}/> : budgetStatic.local.total}
+            총 약 {Math.round(localKrw).toLocaleString()}원 (실지출 {travelWalletRm.toLocaleString()} RM 예상액)
           </p>
 
           {/* 트래블월렛 섹션 */}
@@ -383,7 +369,7 @@ function BudgetGuide() {
               {isAdminMode ? <input type="text" value={budgetStatic.local.travelWallet.title} onChange={e => updateBudgetStatic({...budgetStatic, local: {...budgetStatic.local, travelWallet: {...budgetStatic.local.travelWallet, title: e.target.value}}})} style={{padding:'2px', width:'100%'}}/> : budgetStatic.local.travelWallet.title}
             </h4>
             <p style={{ fontSize: '1rem', fontWeight: '800', color: 'var(--ocean-accent)', marginBottom: '8px' }}>
-              총 {isAdminMode ? <input type="text" value={budgetStatic.local.travelWallet.total} onChange={e => updateBudgetStatic({...budgetStatic, local: {...budgetStatic.local, travelWallet: {...budgetStatic.local.travelWallet, total: e.target.value}}})} style={{padding:'2px'}}/> : convertRmTotalToKrwString(budgetStatic.local.travelWallet.total)}
+              총 {travelWalletRm.toLocaleString()} RM (약 {Math.round(localWalletKrw).toLocaleString()}원)
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
               {budgetStatic.local.travelWallet.items.map((item, idx) => (
