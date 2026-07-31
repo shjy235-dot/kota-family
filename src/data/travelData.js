@@ -99,7 +99,7 @@ const travelData = {
       "12:00 보트 탑승하여 <a href='https://blog.naver.com/chayalim/223477669647' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>사피섬</a>으로 이동",
       "12:30 ~ 15:00 [사피섬] 가족 자유 스노클링 및 해변 휴식 (점심: 섬 내 식당/간식)",
       "15:00 귀환 보트 탑승 ➔ 육지 도착 후 리조트 복귀 및 샤워",
-      "17:30 시내 이동 ➔ 웰컴 씨푸드 저녁 식사 및 필리피노 야시장 구경",
+      "17:30 시내 이동 ➔ 이마고몰 투어 및 솔드아웃 저녁 식사",
       "20:00 리조트 복귀 후 휴식"
     ] },
     { day: "Day 3 (9/1 화)", title: "원데이 골드카드 100% 활용 데이", schedule: [
