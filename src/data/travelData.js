@@ -223,7 +223,7 @@ const travelData = {
     local: {
       total: "약 792,000원 (실지출 2,200 RM 예상액)",
       travelWallet: {
-        title: "트래블월렛 사전 충전 (ATM 인출 + 카드 결제)",
+        title: "트레블로그카드 사전 충전 (ATM 인출 + 카드 결제)",
         total: "2,800 RM (약 1,008,000원)",
         items: [
           { name: "투어 잔금 (현금 필수)", amount: "1,420 RM", desc: "공항 도착 즉시 ATM에서 인출" },
