@@ -14,7 +14,6 @@ export const TravelProvider = ({ children }) => {
   // 개별 상태들
   const [checklist, setChecklist] = useState([]);
   const [packing, setPacking] = useState([]);
-  const [baseAmount, setBaseAmount] = useState(3480000);
   const [expenses, setExpenses] = useState([]);
 
   // 추가된 정적 데이터들 (초기값은 travelData.js)
@@ -47,7 +46,6 @@ export const TravelProvider = ({ children }) => {
         }
         setChecklist(currentChecklist);
         setPacking(data.packing || []);
-        setBaseAmount(data.baseAmount || 3480000);
         setExpenses(data.expenses || []);
         
         // 새로 추가된 필드들 (없으면 travelData 기본값 사용)
@@ -105,16 +103,12 @@ export const TravelProvider = ({ children }) => {
           return found || defaultItem;
         }) : initialPacking;
 
-        const savedBase = localStorage.getItem('kota_budget_base');
-        const mergedBase = savedBase ? parseInt(savedBase, 10) : 3480000;
-
         const savedExpenses = localStorage.getItem('kota_expenses');
         const mergedExpenses = savedExpenses ? JSON.parse(savedExpenses) : [];
 
         const initialData = {
           checklist: mergedChecklist,
           packing: mergedPacking,
-          baseAmount: mergedBase,
           expenses: mergedExpenses,
           itinerary: travelData.itinerary,
           tours: travelData.tours,
@@ -138,7 +132,6 @@ export const TravelProvider = ({ children }) => {
     // 로컬 상태 즉시 반영
     if (field === 'checklist') setChecklist(value);
     else if (field === 'packing') setPacking(value);
-    else if (field === 'baseAmount') setBaseAmount(value);
     else if (field === 'expenses') setExpenses(value);
     else if (field === 'itinerary') setItinerary(value);
     else if (field === 'tours') setTours(value);
@@ -158,7 +151,6 @@ export const TravelProvider = ({ children }) => {
       isAdminMode, setIsAdminMode,
       checklist, updateChecklist: (v) => updateField('checklist', v),
       packing, updatePacking: (v) => updateField('packing', v),
-      baseAmount, updateBaseAmount: (v) => updateField('baseAmount', v),
       expenses, updateExpenses: (v) => updateField('expenses', v),
       itinerary, updateItinerary: (v) => updateField('itinerary', v),
       tours, updateTours: (v) => updateField('tours', v),

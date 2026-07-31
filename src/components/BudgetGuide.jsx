@@ -4,16 +4,12 @@ import travelData from '../data/travelData';
 import { useTravel } from '../context/TravelContext';
 
 function BudgetGuide() {
-  const { 
-    baseAmount, updateBaseAmount, 
-    expenses, updateExpenses, 
-    budgetStatic, updateBudgetStatic, 
-    exchangeRate, updateExchangeRate, 
-    isAdminMode, isLoading 
+  const {
+    expenses, updateExpenses,
+    budgetStatic, updateBudgetStatic,
+    exchangeRate, updateExchangeRate,
+    isAdminMode, isLoading
   } = useTravel();
-
-  const [isEditingBase, setIsEditingBase] = useState(false);
-  const [tempBaseAmount, setTempBaseAmount] = useState(baseAmount);
 
   // 환율 편집용 로컬 상태
   const [isEditingRate, setIsEditingRate] = useState(false);
@@ -32,10 +28,6 @@ function BudgetGuide() {
     amount: '', 
     currency: 'RM' 
   });
-
-  useEffect(() => {
-    setTempBaseAmount(baseAmount);
-  }, [baseAmount]);
 
   useEffect(() => {
     setTempRate(exchangeRate);
@@ -60,16 +52,14 @@ function BudgetGuide() {
     fetchRealTimeRate();
   }, []);
 
-  const handleBaseSave = () => {
-    setIsEditingBase(false);
-    updateBaseAmount(tempBaseAmount);
-  };
-
   const handleRateSave = () => {
     setIsEditingRate(false);
     const parsedRate = parseFloat(tempRate) || 360;
     updateExchangeRate(parsedRate);
   };
+
+  // 계산기는 예산용 수동 환율이 아니라 실시간 환율 기준 (실시간 환율 미조회 시 수동 환율로 대체)
+  const calcRate = realTimeRate || exchangeRate;
 
   const handleCalcRmChange = (val) => {
     setCalcRm(val);
@@ -77,7 +67,7 @@ function BudgetGuide() {
       setCalcKrw('');
     } else {
       const num = parseFloat(val) || 0;
-      setCalcKrw(Math.round(num * exchangeRate).toLocaleString());
+      setCalcKrw(Math.round(num * calcRate).toLocaleString());
     }
   };
 
@@ -87,7 +77,7 @@ function BudgetGuide() {
       setCalcRm('');
     } else {
       const num = parseFloat(val.replace(/,/g, '')) || 0;
-      setCalcRm((Math.round((num / exchangeRate) * 100) / 100).toString());
+      setCalcRm((Math.round((num / calcRate) * 100) / 100).toString());
     }
   };
 
@@ -128,17 +118,50 @@ function BudgetGuide() {
     return totalStr;
   };
 
+  // "약 2,688,000원", "15~20만 원" 같은 원화 텍스트를 숫자로 환산 (범위는 평균값 사용)
+  const parseKrwText = (str) => {
+    if (!str) return 0;
+    const cleaned = str.replace(/약|원|,|\s/g, '');
+    const hasMan = cleaned.includes('만');
+    const parts = cleaned.replace(/만/g, '').split('~').map(p => parseFloat(p) || 0);
+    const avg = parts.reduce((a, b) => a + b, 0) / parts.length;
+    return hasMan ? avg * 10000 : avg;
+  };
+
+  // "2,800 RM" 같은 RM 텍스트에서 숫자만 추출
+  const parseRmText = (str) => {
+    if (!str) return 0;
+    const match = str.match(/([\d,.]+)\s*RM/i);
+    return match ? parseFloat(match[1].replace(/,/g, '')) || 0 : 0;
+  };
+
+  // 항목 금액을 천단위 쉼표 + 단위(원/RM)로 정규화해서 표시
+  const formatAmount = (str, unit) => {
+    if (!str) return str;
+    const match = str.match(/-?[\d,.]+/);
+    if (!match) return str;
+    const num = parseFloat(match[0].replace(/,/g, ''));
+    if (isNaN(num)) return str;
+    return unit === 'RM' ? `${num.toLocaleString()} RM` : `${num.toLocaleString()}원`;
+  };
+
   if (isLoading) return <div style={{textAlign:'center', padding:'50px'}}>데이터 동기화 중...</div>;
 
-  // 실지출 합산 계산 (RM은 현재 설정된 환율로 환산)
+  if (!budgetStatic) return null;
+
+  // 사전결제 예상 (한국, 원화)
+  const prePaidKrw = parseKrwText(budgetStatic.prePaid.total);
+  // 현지지출 예상 (트래블로그카드 RM 환산 + 현금 비상금)
+  const localWalletKrw = parseRmText(budgetStatic.local.travelWallet.total) * exchangeRate;
+  const localCashKrw = parseKrwText(budgetStatic.local.cash.total);
+  const localKrw = localWalletKrw + localCashKrw;
+  // 실지출 합산 (RM은 현재 설정된 환율로 환산)
   const expensesSumKrw = expenses.reduce((sum, exp) => {
     const amt = parseFloat(exp.amount) || 0;
     return sum + (exp.currency === 'RM' ? amt * exchangeRate : amt);
   }, 0);
 
-  const totalSpent = baseAmount + expensesSumKrw;
-
-  if (!budgetStatic) return null;
+  const totalSpent = prePaidKrw + localKrw + expensesSumKrw;
 
   const cardStyle = { padding: '14px 12px', marginBottom: '12px' };
 
@@ -154,28 +177,10 @@ function BudgetGuide() {
         <div style={{ margin: '8px 0', fontSize: '2.2rem', fontWeight: '900', color: 'var(--ocean-accent)' }}>
           약 {totalSpent.toLocaleString()}원
         </div>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '6px', marginTop: '10px', fontSize: '0.85rem' }}>
-          <span style={{ color: '#555' }}>기본 고정금액(사전+현지예상): </span>
-          {isEditingBase ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <input 
-                type="number" 
-                value={tempBaseAmount}
-                onChange={(e) => setTempBaseAmount(parseInt(e.target.value) || 0)}
-                style={{ width: '100px', padding: '2px 4px', border: '1px solid #ccc', borderRadius: '4px' }}
-                autoFocus
-              />
-              <button onClick={handleBaseSave} style={{ background: 'var(--ocean-accent)', color: 'white', border: 'none', borderRadius: '4px', padding: '2px 8px' }}><Check size={14}/></button>
-            </div>
-          ) : (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 'bold' }}>
-              {baseAmount.toLocaleString()}원
-              <button onClick={() => setIsEditingBase(true)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: 0 }}><Edit2 size={14} /></button>
-            </div>
-          )}
-        </div>
-        <div style={{ fontSize: '0.8rem', color: '#666', marginTop: '4px' }}>
-          + 현지 입력 지출액 ({expensesSumKrw.toLocaleString()}원)
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '10px', fontSize: '0.8rem', color: '#666' }}>
+          <span>사전결제 예상: {Math.round(prePaidKrw).toLocaleString()}원</span>
+          <span>현지지출 예상: {Math.round(localKrw).toLocaleString()}원</span>
+          <span>실지출 합계: {Math.round(expensesSumKrw).toLocaleString()}원</span>
         </div>
       </div>
 
@@ -213,7 +218,9 @@ function BudgetGuide() {
 
         {/* 링깃 계산기 */}
         <div style={{ marginTop: '12px', borderTop: '1px solid rgba(251, 133, 0, 0.1)', paddingTop: '12px' }}>
-          <div style={{ fontSize: '0.8rem', fontWeight: 'bold', marginBottom: '6px', color: 'var(--text-muted)' }}>🧮 링깃 ⇄ 원화 간편 계산기</div>
+          <div style={{ fontSize: '0.8rem', fontWeight: 'bold', marginBottom: '6px', color: 'var(--text-muted)' }}>
+            🧮 링깃 ⇄ 원화 간편 계산기 <span style={{ fontWeight: 'normal' }}>(실시간 환율 {calcRate}원 기준)</span>
+          </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <input 
               type="number" 
@@ -341,7 +348,7 @@ function BudgetGuide() {
                     const newItems = [...budgetStatic.prePaid.items];
                     newItems[idx] = { ...item, amount: e.target.value };
                     updateBudgetStatic({...budgetStatic, prePaid: {...budgetStatic.prePaid, items: newItems}});
-                  }} style={{padding:'2px', width:'80px'}}/> : item.amount}
+                  }} style={{padding:'2px', width:'80px'}}/> : formatAmount(item.amount, '원')}
                   {isAdminMode && <button onClick={() => {
                     const newItems = [...budgetStatic.prePaid.items];
                     newItems.splice(idx, 1);
@@ -404,7 +411,7 @@ function BudgetGuide() {
                       updateBudgetStatic({...budgetStatic, local: {...budgetStatic.local, travelWallet: {...budgetStatic.local.travelWallet, items: newItems}}});
                     }} style={{padding:'2px', width:'60px'}}/> : (
                       <span>
-                        {item.amount}
+                        {formatAmount(item.amount, 'RM')}
                         {convertRmStringToKrwString(item.amount)}
                       </span>
                     )}
