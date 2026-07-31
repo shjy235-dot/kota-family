@@ -1,0 +1,29 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - heading "🏖️ 코타키나발루 가족 여행" [level=1] [ref=e5]
+  - main [ref=e6]:
+    - generic [ref=e7]:
+      - heading "우리 가족 여행까지" [level=2] [ref=e8]
+      - generic [ref=e9]:
+        - paragraph [ref=e10]: 가족 코타키나발루 여행
+        - generic [ref=e11]: D-31
+        - paragraph [ref=e12]: 2026-08-30 출국
+      - generic [ref=e13]:
+        - heading "출국 전 필수 체크리스트 (0/5)" [level=3] [ref=e14]
+        - generic [ref=e15]:
+          - generic [ref=e16] [cursor=pointer]: 말레이시아 디지털 입국카드(MDAC) 사전 등록 (출발 3일 전)
+          - generic [ref=e20] [cursor=pointer]: 인천공항 스마트패스 가족 모두 등록
+          - generic [ref=e24] [cursor=pointer]: 가족별 개인 eSIM 설치 또는 SKT 가족로밍 가입
+          - generic [ref=e28] [cursor=pointer]: 그랩(Grab) 택시 앱 설치 및 트래블로그 카드 연동
+          - generic [ref=e32] [cursor=pointer]: 인천공항 다자녀 장기주차 사전 할인 등록
+  - navigation [ref=e36]:
+    - link "홈" [ref=e37] [cursor=pointer]:
+      - /url: /
+    - link "항공/입국" [ref=e42] [cursor=pointer]:
+      - /url: /flight
+    - link "숙소/식사" [ref=e46] [cursor=pointer]:
+      - /url: /hotel
+    - link "일정" [ref=e51] [cursor=pointer]:
+      - /url: /itinerary
+    - link "준비물" [ref=e55] [cursor=pointer]:
+      - /url: /packing
