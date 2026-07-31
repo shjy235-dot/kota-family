@@ -14,8 +14,8 @@ function Header() {
   const { isAdminMode, setIsAdminMode } = useTravel();
   
   return (
-    <header className="glass-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 16px' }}>
-      <h1 style={{ flex: 1, textAlign: 'center', margin: 0, fontSize: '1.2rem' }}>🏖️ 코타키나발루 가족 여행</h1>
+    <header className="glass-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px' }}>
+      <h1 style={{ flex: 1, textAlign: 'center', margin: 0, fontSize: '1.3rem' }}>🏖️ 코타키나발루 가족 여행</h1>
       <button 
         onClick={() => setIsAdminMode(!isAdminMode)}
         style={{ 
