@@ -49,7 +49,18 @@ export const TravelProvider = ({ children }) => {
         setExpenses(data.expenses || []);
         
         // 새로 추가된 필드들 (없으면 travelData 기본값 사용)
-        if (data.itinerary) setItinerary(data.itinerary);
+        let currentItinerary = data.itinerary || travelData.itinerary;
+        // Day2 저녁 일정 텍스트 강제 업데이트 패치 (기존 사용자 DB 패치용)
+        const oldDay2Dinner = "17:30 시내 이동 ➔ 웰컴 씨푸드 저녁 식사 및 필리피노 야시장 구경";
+        if (currentItinerary.some(day => day.schedule?.includes(oldDay2Dinner))) {
+          currentItinerary = currentItinerary.map(day =>
+            day.schedule?.includes(oldDay2Dinner)
+              ? { ...day, schedule: day.schedule.map(line => line === oldDay2Dinner ? "17:30 시내 이동 ➔ 이마고몰 투어 및 솔드아웃 저녁 식사" : line) }
+              : day
+          );
+          updateDoc(docRef, { itinerary: currentItinerary });
+        }
+        setItinerary(currentItinerary);
         if (data.tours) setTours(data.tours);
         if (data.tourNotes) setTourNotes(data.tourNotes);
         if (data.hotel) setHotel(data.hotel);
