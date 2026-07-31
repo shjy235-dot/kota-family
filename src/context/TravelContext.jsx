@@ -51,8 +51,10 @@ export const TravelProvider = ({ children }) => {
         // 새로 추가된 필드들 (없으면 travelData 기본값 사용)
         let currentItinerary = data.itinerary || travelData.itinerary;
         // 일정 텍스트 강제 업데이트 패치 (기존 사용자 DB 패치용, [예전 문구, 새 문구] 목록)
+        const soldOutDinnerLine = "17:30 시내 이동 ➔ 이마고몰 투어 및 <a href='https://blog.naver.com/hoilove5653/224275232094' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>솔드아웃</a> 저녁 식사";
         const itineraryTextPatches = [
-          ["17:30 시내 이동 ➔ 웰컴 씨푸드 저녁 식사 및 필리피노 야시장 구경", "17:30 시내 이동 ➔ 이마고몰 투어 및 솔드아웃 저녁 식사"],
+          ["17:30 시내 이동 ➔ 웰컴 씨푸드 저녁 식사 및 필리피노 야시장 구경", soldOutDinnerLine],
+          ["17:30 시내 이동 ➔ 이마고몰 투어 및 솔드아웃 저녁 식사", soldOutDinnerLine],
           ["16:00 인천공항 제1터미널 단기주차장 지하 1층(C구역) 공식 주차대행 접수장 하차", "16:00 인천공항 제1터미널 단기주차장 지하 1층(B1) A구역 15번 공식 주차대행 접수장 하차"],
           ["07:50 단기주차장 지하 1층 주차대행 정산소 이동 (다자녀 할인 정산)", "07:50 단기주차장 지하 3층 A정산소(A32구역) 또는 H정산소(H38구역) 이동"]
         ];
