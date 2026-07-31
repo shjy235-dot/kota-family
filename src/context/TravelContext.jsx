@@ -53,7 +53,24 @@ export const TravelProvider = ({ children }) => {
         if (data.hotel) setHotel(data.hotel);
         if (data.diningAndShopping) setDiningAndShopping(data.diningAndShopping);
         if (data.flights) setFlights(data.flights);
-        if (data.budgetStatic) setBudgetStatic(data.budgetStatic);
+        let currentBudget = data.budgetStatic || travelData.budget;
+        if (currentBudget?.local?.travelWallet?.title) {
+          const title = currentBudget.local.travelWallet.title;
+          if (title.includes("트래블월렛") || title.includes("트레블월렛")) {
+            currentBudget = {
+              ...currentBudget,
+              local: {
+                ...currentBudget.local,
+                travelWallet: {
+                  ...currentBudget.local.travelWallet,
+                  title: title.replace("트래블월렛", "트래블로그카드").replace("트레블월렛", "트래블로그카드")
+                }
+              }
+            };
+            updateDoc(docRef, { budgetStatic: currentBudget });
+          }
+        }
+        setBudgetStatic(currentBudget);
         
         setIsLoading(false);
       } else {
