@@ -152,7 +152,13 @@ function HotelInfo() {
       <details className="glass-card" style={{ ...cardStyle, background: 'rgba(251, 133, 0, 0.1)' }}>
         <summary className="section-title" style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', listStyle: 'none', margin: 0 }}>
           <Star size={18} color="var(--sunset-accent)"/> 
-          <span>골드카드 혜택 {isAdminMode ? <input type="text" value={hotel.goldCard.date} onChange={e => updateHotel({...hotel, goldCard: {...hotel.goldCard, date: e.target.value}})} style={{padding:'2px'}} onClick={e=>e.stopPropagation()}/> : `(${hotel.goldCard.date})`}</span>
+          <span style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '6px' }}>
+            골드카드 혜택 
+            <a href="/goldcard.pdf" target="_blank" rel="noreferrer" style={{ fontSize: '0.85rem', color: '#0077b6', textDecoration: 'underline', backgroundColor: 'rgba(255,255,255,0.7)', padding: '2px 6px', borderRadius: '4px' }} onClick={e => e.stopPropagation()}>
+              📄 원본 PDF 보기
+            </a>
+            {isAdminMode ? <input type="text" value={hotel.goldCard.date} onChange={e => updateHotel({...hotel, goldCard: {...hotel.goldCard, date: e.target.value}})} style={{padding:'2px'}} onClick={e=>e.stopPropagation()}/> : <span style={{ fontSize: '0.9rem' }}>({hotel.goldCard.date})</span>}
+          </span>
           <span style={{ marginLeft: 'auto', fontSize: '0.8rem', color: 'var(--text-muted)' }}>자세히 보기 ▼</span>
         </summary>
         <div style={{ marginTop: '12px', borderTop: '1px solid rgba(251, 133, 0, 0.2)', paddingTop: '12px' }}>
