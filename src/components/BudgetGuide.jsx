@@ -45,7 +45,7 @@ function BudgetGuide() {
   useEffect(() => {
     const fetchRealTimeRate = async () => {
       try {
-        const res = await fetch('https://api.frankfurter.app/latest?from=MYR&to=KRW');
+        const res = await fetch('https://api.frankfurter.dev/v1/latest?from=MYR&to=KRW');
         if (res.ok) {
           const data = await res.json();
           const rate = data.rates.KRW;
