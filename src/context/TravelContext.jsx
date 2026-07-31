@@ -63,7 +63,7 @@ export const TravelProvider = ({ children }) => {
                 ...currentBudget.local,
                 travelWallet: {
                   ...currentBudget.local.travelWallet,
-                  title: title.replace("트래블월렛", "트래블로그카드").replace("트레블월렛", "트래블로그카드")
+                  title: title.replace("트래블월렛", "트레블로그카드").replace("트레블월렛", "트레블로그카드")
                 }
               }
             };
