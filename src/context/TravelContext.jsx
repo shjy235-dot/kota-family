@@ -36,14 +36,18 @@ export const TravelProvider = ({ children }) => {
         const data = docSnap.data();
         const dataChecklist = data.checklist || [];
         let currentChecklist = dataChecklist;
-        // MDAC 링크 강제 업데이트 패치 (기존 사용자 DB 패치용)
-        const mdacItem = currentChecklist.find(item => item.id === 1);
-        if (mdacItem && !mdacItem.task.includes('<a href')) {
-          currentChecklist = currentChecklist.map(item => 
-            item.id === 1 ? { ...item, task: travelData.preTripChecklist.find(t => t.id === 1).task } : item
-          );
-          updateDoc(docRef, { checklist: currentChecklist }); // DB 업데이트
-        }
+        // 참고 링크 강제 업데이트 패치 (기존 사용자 DB 패치용, MDAC/스마트패스 등)
+        let checklistPatched = false;
+        [1, 2].forEach(id => {
+          const item = currentChecklist.find(i => i.id === id);
+          if (item && !item.task.includes('<a href')) {
+            checklistPatched = true;
+            currentChecklist = currentChecklist.map(i =>
+              i.id === id ? { ...i, task: travelData.preTripChecklist.find(t => t.id === id).task } : i
+            );
+          }
+        });
+        if (checklistPatched) updateDoc(docRef, { checklist: currentChecklist }); // DB 업데이트
         setChecklist(currentChecklist);
         setPacking(data.packing || []);
         setExpenses(data.expenses || []);
