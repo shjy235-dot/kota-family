@@ -1,15 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
 
 :root {
-  /* Tropical Ocean Palette */
-  --bg-gradient: linear-gradient(135deg, #0077b6 0%, #00b4d8 50%, #90e0ef 100%);
+  /* Tropical Ocean & Sunset Animated Palette */
+  --bg-gradient: linear-gradient(45deg, #0077b6, #00b4d8, #48cae4, #ffb703, #fb8500);
   --sunset-accent: #fb8500;
   --sunset-light: #ffb703;
+  --ocean-accent: #023047;
   --text-main: #023047;
   --text-muted: #4a6fa5;
-  --glass-bg: rgba(255, 255, 255, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.4);
-  --glass-shadow: 0 8px 32px 0 rgba(0, 31, 63, 0.15);
+  --glass-bg: rgba(255, 255, 255, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.5);
+  --glass-shadow: 0 10px 40px 0 rgba(0, 31, 63, 0.1);
 }
 
 * {
@@ -20,16 +22,38 @@
 }
 
 body {
-  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+  font-family: 'Pretendard', -apple-system, sans-serif;
   background: var(--bg-gradient);
+  background-size: 300% 300%;
+  animation: gradientMove 15s ease infinite;
   color: var(--text-main);
   min-height: 100vh;
   background-attachment: fixed;
   overflow-x: hidden;
 }
 
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0px); }
+}
+
+@keyframes pulse-soft {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
 h1, h2, h3, h4 {
-  font-weight: 700;
+  font-family: 'Jua', sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.5px;
 }
 
 a {
@@ -40,11 +64,27 @@ a {
 /* Glassmorphism Utilities */
 .glass-card {
   background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--glass-border);
-  border-radius: 16px;
+  border-radius: 24px; /* 더 둥글게 */
   box-shadow: var(--glass-shadow);
   padding: 20px;
   margin-bottom: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 45px 0 rgba(0, 31, 63, 0.15);
+}
+
+/* Emoji Animation Helper */
+.emoji-float {
+  display: inline-block;
+  animation: float 3s ease-in-out infinite;
+}
+
+.pulse-dday {
+  animation: pulse-soft 2s infinite;
 }

@@ -34,7 +34,9 @@ function Itinerary() {
 
   return (
     <div className="itinerary">
-      <h2 className="page-title">전체 일정 요약 {isAdminMode && <span style={{fontSize:'0.8rem', color:'var(--sunset-accent)'}}>[수정 모드]</span>}</h2>
+      <h2 className="page-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <span className="emoji-float">🗺️</span> 전체 일정 요약 {isAdminMode && <span style={{fontSize:'0.8rem', color:'var(--sunset-accent)'}}>[수정 모드]</span>}
+      </h2>
 
       <div className="timeline-container">
         {itinerary.map((dayPlan, idx) => (
@@ -96,8 +98,8 @@ function Itinerary() {
 
       {tours && tours.length > 0 && (
         <div className="tours-container" style={{ marginTop: '2rem' }}>
-          <h2 className="page-title" style={{ fontSize: '1.2rem', marginBottom: '1rem', borderTop: '1px solid rgba(255,255,255,0.3)', paddingTop: '1.5rem' }}>
-            <Compass size={24} style={{ verticalAlign: 'middle', marginRight: '8px' }} color="var(--primary-color)" />
+          <h2 className="page-title" style={{ fontSize: '1.2rem', marginBottom: '1rem', borderTop: '1px solid rgba(255,255,255,0.3)', paddingTop: '1.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span className="emoji-float">⛵</span>
             투어/액티비티 상세 가이드
           </h2>
           {tours.map((tour, idx) => (

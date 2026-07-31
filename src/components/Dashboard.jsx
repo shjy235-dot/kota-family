@@ -75,11 +75,13 @@ function Dashboard() {
 
   return (
     <div className="dashboard">
-      <h2 className="page-title">우리 가족 여행까지</h2>
+      <h2 className="page-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <span className="emoji-float">✈️</span> 우리 가족 여행까지
+      </h2>
       
       <div className="glass-card d-day-card" style={{ textAlign: 'center', padding: '30px 20px' }}>
-        <p style={{ fontSize: '1.2rem', marginBottom: '10px' }}>{travelData.tripInfo.title}</p>
-        <div style={{ fontSize: '3.5rem', fontWeight: '800', color: 'var(--sunset-accent)' }}>
+        <p style={{ fontSize: '1.2rem', marginBottom: '10px' }}>{travelData.tripInfo.title} <span className="emoji-float">🌴</span></p>
+        <div className="pulse-dday" style={{ fontSize: '3.5rem', fontWeight: '800', color: 'var(--sunset-accent)' }}>
           {dDay > 0 ? `D-${dDay}` : dDay === 0 ? 'D-Day!' : `D+${Math.abs(dDay)}`}
         </div>
         <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginTop: '10px' }}>
@@ -126,7 +128,9 @@ function Dashboard() {
         </div>
       </div>
 
-      <h2 className="page-title" style={{ marginTop: '32px' }}>짐 챙기기 준비물 목록</h2>
+      <h2 className="page-title" style={{ marginTop: '32px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <span className="emoji-float">🧳</span> 짐 챙기기 준비물 목록
+      </h2>
       
       {Object.keys(groupedPacking).map(category => {
         const items = groupedPacking[category];

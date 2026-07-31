@@ -46,7 +46,7 @@ function HotelInfo() {
   return (
     <div className="hotel-info">
       <h2 className="page-title" style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center', marginBottom: '16px' }}>
-        <Building size={24} color="var(--primary-color)"/> 숙소 및 맛집 정보 {isAdminMode && <span style={{fontSize:'0.8rem', color:'var(--sunset-accent)'}}>[수정]</span>}
+        <span className="emoji-float">🏨</span> 숙소 및 맛집 정보 {isAdminMode && <span style={{fontSize:'0.8rem', color:'var(--sunset-accent)'}}>[수정]</span>}
       </h2>
 
       <div className="glass-card" style={cardStyle}>

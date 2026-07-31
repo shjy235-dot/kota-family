@@ -53,7 +53,7 @@ function BudgetGuide() {
   return (
     <div className="budget-guide">
       <h2 className="page-title" style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center', marginBottom: '16px' }}>
-        <Wallet size={24} color="var(--primary-color)"/> 여행 가계부 및 예산
+        <span className="emoji-float">💰</span> 여행 가계부 및 예산
       </h2>
       
       {/* 총액 카드 */}
