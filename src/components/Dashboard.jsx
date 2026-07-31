@@ -116,7 +116,7 @@ function Dashboard() {
                   <button onClick={(e) => { e.stopPropagation(); deleteChecklistItem(item.id); }} style={{ background: '#e76f51', color: 'white', border: 'none', borderRadius: '4px', padding: '0 8px' }}>삭제</button>
                 </div>
               ) : (
-                <span style={{ fontSize: '0.9rem', lineHeight: '1.3' }}>{item.task}</span>
+                <span style={{ fontSize: '0.9rem', lineHeight: '1.3' }} dangerouslySetInnerHTML={{ __html: item.task }} />
               )}
             </div>
           ))}
@@ -168,7 +168,7 @@ function Dashboard() {
                       <button onClick={(e) => { e.stopPropagation(); deletePackingItem(item.id); }} style={{ background: '#e76f51', color: 'white', border: 'none', borderRadius: '4px', padding: '0 8px' }}>삭제</button>
                     </div>
                   ) : (
-                    <span style={{ fontSize: '0.9rem', lineHeight: '1.3' }}>{item.task}</span>
+                    <span style={{ fontSize: '0.9rem', lineHeight: '1.3' }} dangerouslySetInnerHTML={{ __html: item.task }} />
                   )}
                 </div>
               ))}
