@@ -51,6 +51,25 @@ function BudgetGuide() {
     updateIsManualRate(true); // 직접 수정했으므로 수동 모드로 전환
   };
 
+  const handleResetRate = async () => {
+    try {
+      const res = await fetch('https://api.frankfurter.app/latest?from=MYR&to=KRW');
+      if (res.ok) {
+        const data = await res.json();
+        const rate = data.rates.KRW;
+        if (rate) {
+          const roundedRate = Math.round(rate * 100) / 100;
+          await updateExchangeRate(roundedRate);
+          await updateIsManualRate(false);
+          return;
+        }
+      }
+    } catch (err) {
+      console.error("실시간 환율 조회 실패:", err);
+    }
+    await updateIsManualRate(false);
+  };
+
   const handleCalcRmChange = (val) => {
     setCalcRm(val);
     if (val === '') {
@@ -189,7 +208,7 @@ function BudgetGuide() {
               <button onClick={() => { setTempRate(exchangeRate); setIsEditingRate(true); }} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: 0 }} title="환율 수동 수정"><Edit2 size={14} /></button>
               {isManualRate && (
                 <button 
-                  onClick={() => updateIsManualRate(false)} 
+                  onClick={handleResetRate} 
                   style={{ background: 'rgba(0,119,182,0.1)', color: 'var(--ocean-accent)', border: 'none', borderRadius: '4px', padding: '3px 8px', fontSize: '0.75rem', cursor: 'pointer', fontWeight: 'bold' }}
                 >
                   🔄 실시간 환율로 초기화
