@@ -49,7 +49,17 @@ export const TravelProvider = ({ children }) => {
         });
         if (checklistPatched) updateDoc(docRef, { checklist: currentChecklist }); // DB 업데이트
         setChecklist(currentChecklist);
-        setPacking(data.packing || []);
+
+        let currentPacking = data.packing || [];
+        // ATM기 사용법 항목에 참고 링크 강제 업데이트 패치 (기존 사용자 DB 패치용)
+        const atmTask = "현지 공항 atm기 사용법";
+        const atmTaskWithLink = "현지 공항 atm기 사용법 <a href='https://blog.naver.com/zbxm914/224360088544' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>[참고 링크]</a>";
+        if (currentPacking.some(item => item.task === atmTask)) {
+          currentPacking = currentPacking.map(item => item.task === atmTask ? { ...item, task: atmTaskWithLink } : item);
+          updateDoc(docRef, { packing: currentPacking });
+        }
+        setPacking(currentPacking);
+
         setExpenses(data.expenses || []);
         
         // 새로 추가된 필드들 (없으면 travelData 기본값 사용)
@@ -84,14 +94,14 @@ export const TravelProvider = ({ children }) => {
         let currentBudget = data.budgetStatic || travelData.budget;
         if (currentBudget?.local?.travelWallet?.title) {
           const title = currentBudget.local.travelWallet.title;
-          if (title.includes("트래블월렛") || title.includes("트레블월렛")) {
+          if (title.includes("트래블월렛") || title.includes("트레블월렛") || title.includes("트래블로그카드")) {
             currentBudget = {
               ...currentBudget,
               local: {
                 ...currentBudget.local,
                 travelWallet: {
                   ...currentBudget.local.travelWallet,
-                  title: title.replace("트래블월렛", "트래블로그카드").replace("트레블월렛", "트래블로그카드")
+                  title: title.replace("트래블월렛", "트레블로그카드").replace("트레블월렛", "트레블로그카드").replace("트래블로그카드", "트레블로그카드")
                 }
               }
             };
