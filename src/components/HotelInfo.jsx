@@ -50,16 +50,19 @@ function HotelInfo() {
       </h2>
 
       <div className="glass-card" style={cardStyle}>
-        <h3 className="section-title" style={{ marginBottom: '10px' }}>
-          <Building size={18} color="var(--sunset-accent)"/> 
+        <h3 className="section-title" style={{ marginBottom: '10px', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '6px' }}>
+          <Building size={18} color="var(--sunset-accent)"/>
           {isAdminMode ? (
             <input type="text" value={hotel.name} onChange={e => updateHotel({...hotel, name: e.target.value})} style={{marginLeft: '8px', padding: '4px', border: '1px solid #ccc', borderRadius: '4px'}} />
           ) : (
             <span>
-              {hotel.name.split('(')[0]} 
+              {hotel.name.split('(')[0]}
               {hotel.name.includes('(') && <span style={{ display: 'inline-block' }}>({hotel.name.substring(hotel.name.indexOf('(') + 1)}</span>}
             </span>
           )}
+          <a href="/hotel-voucher.pdf" target="_blank" rel="noreferrer" style={{ fontSize: '0.85rem', color: '#0077b6', textDecoration: 'underline', backgroundColor: 'rgba(255,255,255,0.7)', padding: '2px 6px', borderRadius: '4px' }}>
+            📄 예약 바우처 보기
+          </a>
         </h3>
         <p style={{ fontWeight: '600', marginBottom: '10px', fontSize: '0.95rem', color: 'var(--ocean-accent)' }}>
           {isAdminMode ? (
