@@ -98,7 +98,7 @@ const travelData = {
       "09:00 대여품 수령 후 보트 탑승 ➔ <a href='https://blog.naver.com/chayalim/223680436707' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>마무틱섬</a> 이동",
       "09:30 ~ 11:50 [마무틱섬] 패러세일링, 제트스키, 단독 가이드 스노클링 진행",
       "12:00 보트 탑승하여 <a href='https://blog.naver.com/chayalim/223477669647' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>사피섬</a>으로 이동",
-      "12:30 ~ 15:00 [사피섬] 가족 자유 스노클링 및 해변 휴식 (점심: 서브웨이 테이크아웃)",
+      "12:30 ~ 15:00 [사피섬] 가족 자유 스노클링 및 해변 휴식 (점심: 서브웨이/컵라면)",
       "15:00 귀환 보트 탑승 ➔ 육지 도착 후 리조트 복귀 및 샤워",
       "17:30 시내 이동 ➔ 이마고몰 투어 및 <a href='https://blog.naver.com/hoilove5653/224275232094' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>솔드아웃</a> 저녁 식사",
       "20:00 리조트 복귀 후 휴식"
