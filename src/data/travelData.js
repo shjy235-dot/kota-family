@@ -91,7 +91,7 @@ const travelData = {
       "24:10 리조트 체크인 및 휴식 (골드카드 등록 및 식당 예약)"
     ] },
     { day: "Day 2 (8/31 월)", title: "2개 섬 호핑투어(마무틱&사피) & 시내 맛집", schedule: [
-      "07:30 래시가드 착용 후 파이브 세일링 조식 뷔페 식사",
+      "07:00 래시가드 착용 후 파이브 세일링 조식 뷔페 식사",
       "08:00 그랩 탑승 ➔ 제셀톤 포인트 이동 (약 10분 소요)",
       "08:10 제셀톤 스퀘어(Jesselton Square) 내 <a href='https://blog.naver.com/happy_24h/224207917387' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>서브웨이</a>에서 점심 테이크아웃 <a href='http://google.com/maps/search/?api=1&query=Subway%20Jesselton%20Square&query_place_id=ChIJddC6zlhpOzIRwxZRauqldgU' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>[지도 보기]</a>",
       "08:40 제셀톤 포인트 사우스제티 입구 흰색 천막 미팅 (잔금 RM 1,420 현금 일괄 결제)",
