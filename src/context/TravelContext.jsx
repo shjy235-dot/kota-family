@@ -70,7 +70,10 @@ export const TravelProvider = ({ children }) => {
           ["17:30 시내 이동 ➔ 웰컴 씨푸드 저녁 식사 및 필리피노 야시장 구경", soldOutDinnerLine],
           ["17:30 시내 이동 ➔ 이마고몰 투어 및 솔드아웃 저녁 식사", soldOutDinnerLine],
           ["16:00 인천공항 제1터미널 단기주차장 지하 1층(C구역) 공식 주차대행 접수장 하차", "16:00 인천공항 제1터미널 단기주차장 지하 1층(B1) A구역 15번 공식 주차대행 접수장 하차"],
-          ["07:50 단기주차장 지하 1층 주차대행 정산소 이동 (다자녀 할인 정산)", "07:50 단기주차장 지하 3층 A정산소(A32구역) 또는 H정산소(H38구역) 이동"]
+          ["07:50 단기주차장 지하 1층 주차대행 정산소 이동 (다자녀 할인 정산)", "07:50 단기주차장 지하 3층 A정산소(A32구역) 또는 H정산소(H38구역) 이동"],
+          ["08:15 그랩 탑승 ➔ 제셀톤 포인트 이동", "08:00 그랩 탑승 ➔ 제셀톤 포인트 이동 (약 10분 소요)"],
+          ["08:00 그랩 탑승 ➔ 제셀톤 포인트 이동", "08:00 그랩 탑승 ➔ 제셀톤 포인트 이동 (약 10분 소요)"],
+          ["12:30 ~ 15:00 [사피섬] 가족 자유 스노클링 및 해변 휴식 (점심: 섬 내 식당/간식)", "12:30 ~ 15:00 [사피섬] 가족 자유 스노클링 및 해변 휴식 (점심: 서브웨이 테이크아웃)"]
         ];
         let itineraryPatched = false;
         itineraryTextPatches.forEach(([oldLine, newLine]) => {
@@ -83,6 +86,19 @@ export const TravelProvider = ({ children }) => {
             );
           }
         });
+        // 서브웨이 점심 테이크아웃 일정 신규 삽입 패치 (그랩 탑승 줄 바로 뒤에 없으면 추가)
+        const subwayLine = "08:10 제셀톤 스퀘어(Jesselton Square) 내 서브웨이에서 점심 테이크아웃 <a href='http://google.com/maps/search/?api=1&query=Subway%20Jesselton%20Square&query_place_id=ChIJddC6zlhpOzIRwxZRauqldgU' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>[지도 보기]</a>";
+        const grabLine = "08:00 그랩 탑승 ➔ 제셀톤 포인트 이동 (약 10분 소요)";
+        if (currentItinerary.some(day => day.schedule?.includes(grabLine) && !day.schedule.includes(subwayLine))) {
+          itineraryPatched = true;
+          currentItinerary = currentItinerary.map(day => {
+            if (!day.schedule?.includes(grabLine) || day.schedule.includes(subwayLine)) return day;
+            const idx = day.schedule.indexOf(grabLine);
+            const newSchedule = [...day.schedule];
+            newSchedule.splice(idx + 1, 0, subwayLine);
+            return { ...day, schedule: newSchedule };
+          });
+        }
         if (itineraryPatched) updateDoc(docRef, { itinerary: currentItinerary });
         setItinerary(currentItinerary);
         if (data.tours) setTours(data.tours);

@@ -92,12 +92,13 @@ const travelData = {
     ] },
     { day: "Day 2 (8/31 월)", title: "2개 섬 호핑투어(마무틱&사피) & 시내 맛집", schedule: [
       "07:30 래시가드 착용 후 파이브 세일링 조식 뷔페 식사",
-      "08:15 그랩 탑승 ➔ 제셀톤 포인트 이동",
+      "08:00 그랩 탑승 ➔ 제셀톤 포인트 이동 (약 10분 소요)",
+      "08:10 제셀톤 스퀘어(Jesselton Square) 내 서브웨이에서 점심 테이크아웃 <a href='http://google.com/maps/search/?api=1&query=Subway%20Jesselton%20Square&query_place_id=ChIJddC6zlhpOzIRwxZRauqldgU' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>[지도 보기]</a>",
       "08:40 제셀톤 포인트 사우스제티 입구 흰색 천막 미팅 (잔금 RM 1,420 현금 일괄 결제)",
       "09:00 대여품 수령 후 보트 탑승 ➔ <a href='https://blog.naver.com/chayalim/223680436707' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>마무틱섬</a> 이동",
       "09:30 ~ 11:50 [마무틱섬] 패러세일링, 제트스키, 단독 가이드 스노클링 진행",
       "12:00 보트 탑승하여 <a href='https://blog.naver.com/chayalim/223477669647' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>사피섬</a>으로 이동",
-      "12:30 ~ 15:00 [사피섬] 가족 자유 스노클링 및 해변 휴식 (점심: 섬 내 식당/간식)",
+      "12:30 ~ 15:00 [사피섬] 가족 자유 스노클링 및 해변 휴식 (점심: 서브웨이 테이크아웃)",
       "15:00 귀환 보트 탑승 ➔ 육지 도착 후 리조트 복귀 및 샤워",
       "17:30 시내 이동 ➔ 이마고몰 투어 및 <a href='https://blog.naver.com/hoilove5653/224275232094' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>솔드아웃</a> 저녁 식사",
       "20:00 리조트 복귀 후 휴식"
