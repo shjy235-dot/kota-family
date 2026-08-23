@@ -87,7 +87,7 @@ export const TravelProvider = ({ children }) => {
           }
         });
         // 서브웨이 점심 테이크아웃 일정 신규 삽입 패치 (그랩 탑승 줄 바로 뒤에 없으면 추가)
-        const subwayLine = "08:10 제셀톤 스퀘어(Jesselton Square) 내 서브웨이에서 점심 테이크아웃 <a href='http://google.com/maps/search/?api=1&query=Subway%20Jesselton%20Square&query_place_id=ChIJddC6zlhpOzIRwxZRauqldgU' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>[지도 보기]</a>";
+        const subwayLine = "08:10 제셀톤 스퀘어(Jesselton Square) 내 <a href='https://blog.naver.com/happy_24h/224207917387' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>서브웨이</a>에서 점심 테이크아웃 <a href='http://google.com/maps/search/?api=1&query=Subway%20Jesselton%20Square&query_place_id=ChIJddC6zlhpOzIRwxZRauqldgU' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>[지도 보기]</a>";
         const grabLine = "08:00 그랩 탑승 ➔ 제셀톤 포인트 이동 (약 10분 소요)";
         if (currentItinerary.some(day => day.schedule?.includes(grabLine) && !day.schedule.includes(subwayLine))) {
           itineraryPatched = true;
