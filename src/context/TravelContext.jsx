@@ -140,12 +140,19 @@ export const TravelProvider = ({ children }) => {
         if (data.tourNotes) setTourNotes(data.tourNotes);
 
         let currentHotel = data.hotel || travelData.hotel;
-        // 꼬마기차 이용팁 신규 삽입 패치 (기존 사용자 DB 패치용)
-        const kidsTrainTip = "호텔이용팁: 리틀 마젤란에서 <a href='https://kotamania.tistory.com/61' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>꼬마기차</a> 이용 가능";
-        if (currentHotel?.benefits && !currentHotel.benefits.some(b => b.includes('꼬마기차'))) {
-          currentHotel = { ...currentHotel, benefits: [...currentHotel.benefits, kidsTrainTip] };
-          updateDoc(docRef, { hotel: currentHotel });
+        // 꼬마기차 이용팁 신규 삽입/스타일 업데이트 패치 (기존 사용자 DB 패치용)
+        const kidsTrainTip = "<span style='display:block; margin-top:8px; padding-top:8px; border-top:1px dashed rgba(0,0,0,0.15);'><strong style='color:var(--ocean-accent);'>호텔이용팁</strong>: 리틀 마젤란에서 <a href='https://kotamania.tistory.com/61' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>꼬마기차</a> 이용 가능</span>";
+        let hotelPatched = false;
+        if (currentHotel?.benefits) {
+          if (!currentHotel.benefits.some(b => b.includes('꼬마기차'))) {
+            currentHotel = { ...currentHotel, benefits: [...currentHotel.benefits, kidsTrainTip] };
+            hotelPatched = true;
+          } else if (!currentHotel.benefits.some(b => b === kidsTrainTip)) {
+            currentHotel = { ...currentHotel, benefits: currentHotel.benefits.map(b => b.includes('꼬마기차') ? kidsTrainTip : b) };
+            hotelPatched = true;
+          }
         }
+        if (hotelPatched) updateDoc(docRef, { hotel: currentHotel });
         setHotel(currentHotel);
         if (data.diningAndShopping) setDiningAndShopping(data.diningAndShopping);
         if (data.flights) setFlights(data.flights);
