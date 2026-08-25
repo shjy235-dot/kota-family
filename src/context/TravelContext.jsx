@@ -138,7 +138,15 @@ export const TravelProvider = ({ children }) => {
         setItinerary(currentItinerary);
         if (data.tours) setTours(data.tours);
         if (data.tourNotes) setTourNotes(data.tourNotes);
-        if (data.hotel) setHotel(data.hotel);
+
+        let currentHotel = data.hotel || travelData.hotel;
+        // 꼬마기차 이용팁 신규 삽입 패치 (기존 사용자 DB 패치용)
+        const kidsTrainTip = "호텔이용팁: 리틀 마젤란에서 <a href='https://kotamania.tistory.com/61' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>꼬마기차</a> 이용 가능";
+        if (currentHotel?.benefits && !currentHotel.benefits.some(b => b.includes('꼬마기차'))) {
+          currentHotel = { ...currentHotel, benefits: [...currentHotel.benefits, kidsTrainTip] };
+          updateDoc(docRef, { hotel: currentHotel });
+        }
+        setHotel(currentHotel);
         if (data.diningAndShopping) setDiningAndShopping(data.diningAndShopping);
         if (data.flights) setFlights(data.flights);
         

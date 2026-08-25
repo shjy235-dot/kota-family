@@ -90,7 +90,7 @@ function HotelInfo() {
                     updateHotel({...hotel, benefits: newBenefits});
                   }} style={{ background: '#e76f51', color: 'white', border: 'none', borderRadius: '4px', padding: '0 8px' }}>삭제</button>
                 </div>
-              ) : benefit}
+              ) : <span dangerouslySetInnerHTML={{ __html: benefit }} />}
             </li>
           ))}
           {isAdminMode && (
