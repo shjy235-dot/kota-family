@@ -103,13 +103,15 @@ function HotelInfo() {
           <p style={{ fontWeight: '600', fontSize: '0.95rem', color: 'var(--ocean-accent)', marginBottom: '2px' }}>
             호텔이용팁
           </p>
-          <p style={{ fontSize: '0.9rem', lineHeight: '1.4' }}>
-            {isAdminMode ? (
-              <input type="text" value={hotel.usageTip} onChange={e => updateHotel({...hotel, usageTip: e.target.value})} style={{ width: '100%', padding: '4px', border: '1px solid #ccc', borderRadius: '4px' }} />
-            ) : (
-              <span dangerouslySetInnerHTML={{ __html: hotel.usageTip }} />
-            )}
-          </p>
+          {isAdminMode ? (
+            <input type="text" value={hotel.usageTip} onChange={e => updateHotel({...hotel, usageTip: e.target.value})} style={{ width: '100%', padding: '4px', border: '1px solid #ccc', borderRadius: '4px' }} />
+          ) : (
+            <ul className="info-list" style={{ paddingLeft: '18px', margin: 0 }}>
+              <li style={{ fontSize: '0.9rem', lineHeight: '1.4' }}>
+                <span dangerouslySetInnerHTML={{ __html: hotel.usageTip }} />
+              </li>
+            </ul>
+          )}
         </div>
       </div>
 
