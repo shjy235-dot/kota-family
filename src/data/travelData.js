@@ -14,7 +14,7 @@ const travelData = {
   preTripChecklist: [
     { id: 1, task: "말레이시아 디지털 입국카드(MDAC) 사전 등록 (출발 3일 전) <a href='https://blog.naver.com/jooae0512/224354303354' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>[참고 링크]</a>", completed: false },
     { id: 2, task: "인천공항 스마트패스 가족 모두 등록 <a href='https://blog.naver.com/dlwndud1974/224354904353' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>[참고 링크]</a>", completed: false },
-    { id: 3, task: "가족별 개인 eSIM 설치 또는 SKT 가족로밍 가입", completed: false },
+    { id: 3, task: "가족별 개인 <a href='https://www.usimsa.com/guide/domestic' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>eSIM</a> 설치 또는 SKT 가족로밍 가입", completed: false },
     { id: 4, task: "그랩(Grab) 택시 앱 설치 및 트래블로그 카드 연동", completed: false },
     { id: 5, task: "차키 챙기기 (공항 공식 주차대행 발렛 시 필수)", completed: false }
   ],

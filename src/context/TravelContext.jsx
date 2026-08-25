@@ -47,6 +47,14 @@ export const TravelProvider = ({ children }) => {
             );
           }
         });
+        // eSIM 참고 링크 패치 (관리자가 문구를 수정했어도 "eSIM" 단어만 찾아 링크로 치환)
+        const esimItem = currentChecklist.find(i => i.id === 3);
+        if (esimItem && esimItem.task.includes('eSIM') && !esimItem.task.includes('<a href')) {
+          checklistPatched = true;
+          currentChecklist = currentChecklist.map(i =>
+            i.id === 3 ? { ...i, task: i.task.replace('eSIM', "<a href='https://www.usimsa.com/guide/domestic' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>eSIM</a>") } : i
+          );
+        }
         if (checklistPatched) updateDoc(docRef, { checklist: currentChecklist }); // DB 업데이트
         setChecklist(currentChecklist);
 
