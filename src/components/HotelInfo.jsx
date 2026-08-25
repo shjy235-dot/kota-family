@@ -76,7 +76,7 @@ function HotelInfo() {
         </p>
         <ul className="info-list" style={{ paddingLeft: '18px', margin: 0 }}>
           {hotel.benefits.map((benefit, idx) => (
-            <li key={idx} className={benefit.includes('호텔이용팁') ? 'no-bullet' : undefined} style={{ fontSize: '0.9rem', lineHeight: '1.4', marginBottom: '6px' }}>
+            <li key={idx} style={{ fontSize: '0.9rem', lineHeight: '1.4', marginBottom: '6px' }}>
               {isAdminMode ? (
                 <div style={{display:'flex', gap:'4px'}}>
                   <input type="text" value={benefit} onChange={e => {
@@ -99,6 +99,18 @@ function HotelInfo() {
             </button>
           )}
         </ul>
+        <div style={{ marginTop: '10px', paddingTop: '10px', borderTop: '1px dashed rgba(0,0,0,0.15)' }}>
+          <p style={{ fontWeight: '600', fontSize: '0.95rem', color: 'var(--ocean-accent)', marginBottom: '2px' }}>
+            호텔이용팁
+          </p>
+          <p style={{ fontSize: '0.9rem', lineHeight: '1.4' }}>
+            {isAdminMode ? (
+              <input type="text" value={hotel.usageTip} onChange={e => updateHotel({...hotel, usageTip: e.target.value})} style={{ width: '100%', padding: '4px', border: '1px solid #ccc', borderRadius: '4px' }} />
+            ) : (
+              <span dangerouslySetInnerHTML={{ __html: hotel.usageTip }} />
+            )}
+          </p>
+        </div>
       </div>
 
       <div className="glass-card" style={cardStyle}>
