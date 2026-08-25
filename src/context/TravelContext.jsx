@@ -177,7 +177,15 @@ export const TravelProvider = ({ children }) => {
         }
         if (hotelPatched) updateDoc(docRef, { hotel: currentHotel });
         setHotel(currentHotel);
-        if (data.diningAndShopping) setDiningAndShopping(data.diningAndShopping);
+
+        let currentDiningAndShopping = data.diningAndShopping || travelData.diningAndShopping;
+        // 쇼핑 참고 링크 신규 삽입 패치 (기존 사용자 DB 패치용)
+        const shoppingLink1 = "<a href='https://blog.naver.com/zbxm914/224382931615' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>참고 링크 1</a>";
+        if (!currentDiningAndShopping?.shoppingLinks?.some(l => l.includes('224382931615'))) {
+          currentDiningAndShopping = { ...currentDiningAndShopping, shoppingLinks: [...(currentDiningAndShopping?.shoppingLinks || []), shoppingLink1] };
+          updateDoc(docRef, { diningAndShopping: currentDiningAndShopping });
+        }
+        setDiningAndShopping(currentDiningAndShopping);
         if (data.flights) setFlights(data.flights);
         
         let currentBudget = data.budgetStatic || travelData.budget;

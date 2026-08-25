@@ -180,6 +180,38 @@ function HotelInfo() {
             </button>
           )}
         </ul>
+        {(diningAndShopping.shoppingLinks?.length > 0 || isAdminMode) && (
+          <div style={{ marginTop: '10px', paddingTop: '10px', borderTop: '1px dashed rgba(0,0,0,0.15)' }}>
+            <p style={{ fontWeight: '600', fontSize: '0.95rem', color: 'var(--ocean-accent)', marginBottom: '2px' }}>
+              쇼핑 참고 링크
+            </p>
+            <ul className="info-list" style={{ paddingLeft: '18px', margin: 0 }}>
+              {(diningAndShopping.shoppingLinks || []).map((link, idx) => (
+                <li key={idx} style={{ fontSize: '0.9rem', lineHeight: '1.4', marginBottom: '6px' }}>
+                  {isAdminMode ? (
+                    <div style={{display:'flex', gap:'4px'}}>
+                      <input type="text" value={link} onChange={e => {
+                        const newLinks = [...(diningAndShopping.shoppingLinks || [])];
+                        newLinks[idx] = e.target.value;
+                        updateDiningAndShopping({...diningAndShopping, shoppingLinks: newLinks});
+                      }} style={{flex:1, padding: '2px', border: '1px solid #ccc', borderRadius: '4px'}} />
+                      <button onClick={() => {
+                        const newLinks = [...(diningAndShopping.shoppingLinks || [])];
+                        newLinks.splice(idx, 1);
+                        updateDiningAndShopping({...diningAndShopping, shoppingLinks: newLinks});
+                      }} style={{ background: '#e76f51', color: 'white', border: 'none', borderRadius: '4px', padding: '0 8px' }}>삭제</button>
+                    </div>
+                  ) : <span dangerouslySetInnerHTML={{ __html: link }} />}
+                </li>
+              ))}
+              {isAdminMode && (
+                <button onClick={() => updateDiningAndShopping({...diningAndShopping, shoppingLinks: [...(diningAndShopping.shoppingLinks || []), "<a href='https://' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>새 링크</a>"]})} style={{ marginTop: '8px', padding: '4px', background: 'var(--ocean-accent)', color: 'white', border: 'none', borderRadius: '4px' }}>
+                  + 참고 링크 추가
+                </button>
+              )}
+            </ul>
+          </div>
+        )}
       </div>
 
       <details className="glass-card" style={{ ...cardStyle, background: 'rgba(251, 133, 0, 0.1)' }}>

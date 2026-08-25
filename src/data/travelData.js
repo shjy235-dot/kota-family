@@ -77,6 +77,9 @@ const travelData = {
       { name: "올드타운 화이트 커피 & 사바 티", desc: "선물용 커피/차 (이마고몰 에버라이즈 마트)" },
       { name: "카야잼 & 망고 젤리", desc: "아이들 간식 및 선물용" },
       { name: "필리피노 야시장 과일", desc: "망고, 망고스틴 (저녁에 방문)" }
+    ],
+    shoppingLinks: [
+      "<a href='https://blog.naver.com/zbxm914/224382931615' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>참고 링크 1</a>",
     ]
   },
 
