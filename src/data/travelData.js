@@ -147,7 +147,8 @@ const travelData = {
     ] },
     { category: "기타 꿀팁", items: [
       "현지 천연 미네랄워터 구입 (초록/파란뚜껑 스프리처)",
-      "어린이 스노클링용 일반 마스크"
+      "어린이 스노클링용 일반 마스크",
+      "현지 <a href='https://kotamania.tistory.com/50' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>마사지</a> 추천"
     ] }
   ],
 

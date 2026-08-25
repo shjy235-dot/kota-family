@@ -62,10 +62,18 @@ export const TravelProvider = ({ children }) => {
         // ATM기 사용법 항목에 참고 링크 강제 업데이트 패치 (기존 사용자 DB 패치용)
         const atmTask = "현지 공항 atm기 사용법";
         const atmTaskWithLink = "현지 공항 atm기 사용법 <a href='https://blog.naver.com/zbxm914/224360088544' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>[참고 링크]</a>";
+        let packingPatched = false;
         if (currentPacking.some(item => item.task === atmTask)) {
           currentPacking = currentPacking.map(item => item.task === atmTask ? { ...item, task: atmTaskWithLink } : item);
-          updateDoc(docRef, { packing: currentPacking });
+          packingPatched = true;
         }
+        // 마사지 추천 꿀팁 신규 삽입 패치 (기존 사용자 DB 패치용)
+        const massageTip = "현지 <a href='https://kotamania.tistory.com/50' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>마사지</a> 추천";
+        if (!currentPacking.some(item => item.task.includes('마사지'))) {
+          currentPacking = [...currentPacking, { id: '기타 꿀팁-마사지', category: '기타 꿀팁', task: massageTip, completed: false }];
+          packingPatched = true;
+        }
+        if (packingPatched) updateDoc(docRef, { packing: currentPacking });
         setPacking(currentPacking);
 
         setExpenses(data.expenses || []);
