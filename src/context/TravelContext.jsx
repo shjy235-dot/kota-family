@@ -182,7 +182,8 @@ export const TravelProvider = ({ children }) => {
         // 쇼핑 참고 링크 신규 삽입 패치 (기존 사용자 DB 패치용, [식별용 postId, 링크 HTML] 목록)
         const shoppingLinkPatches = [
           ['224382931615', "<a href='https://blog.naver.com/zbxm914/224382931615' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>참고 링크 1</a>"],
-          ['224384357171', "<a href='https://blog.naver.com/dydydy12-/224384357171' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>참고 링크 2</a>"]
+          ['224384357171', "<a href='https://blog.naver.com/dydydy12-/224384357171' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>참고 링크 2</a>"],
+          ['224382344580', "<a href='https://blog.naver.com/sinhyunarr/224382344580' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>참고 링크 3</a>"]
         ];
         let shoppingLinksPatched = false;
         shoppingLinkPatches.forEach(([postId, linkHtml]) => {
