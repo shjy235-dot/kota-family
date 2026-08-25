@@ -80,6 +80,7 @@ const travelData = {
     ],
     shoppingLinks: [
       "<a href='https://blog.naver.com/zbxm914/224382931615' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>참고 링크 1</a>",
+      "<a href='https://blog.naver.com/dydydy12-/224384357171' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>참고 링크 2</a>",
     ]
   },
 

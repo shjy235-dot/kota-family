@@ -179,12 +179,19 @@ export const TravelProvider = ({ children }) => {
         setHotel(currentHotel);
 
         let currentDiningAndShopping = data.diningAndShopping || travelData.diningAndShopping;
-        // 쇼핑 참고 링크 신규 삽입 패치 (기존 사용자 DB 패치용)
-        const shoppingLink1 = "<a href='https://blog.naver.com/zbxm914/224382931615' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>참고 링크 1</a>";
-        if (!currentDiningAndShopping?.shoppingLinks?.some(l => l.includes('224382931615'))) {
-          currentDiningAndShopping = { ...currentDiningAndShopping, shoppingLinks: [...(currentDiningAndShopping?.shoppingLinks || []), shoppingLink1] };
-          updateDoc(docRef, { diningAndShopping: currentDiningAndShopping });
-        }
+        // 쇼핑 참고 링크 신규 삽입 패치 (기존 사용자 DB 패치용, [식별용 postId, 링크 HTML] 목록)
+        const shoppingLinkPatches = [
+          ['224382931615', "<a href='https://blog.naver.com/zbxm914/224382931615' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>참고 링크 1</a>"],
+          ['224384357171', "<a href='https://blog.naver.com/dydydy12-/224384357171' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>참고 링크 2</a>"]
+        ];
+        let shoppingLinksPatched = false;
+        shoppingLinkPatches.forEach(([postId, linkHtml]) => {
+          if (!currentDiningAndShopping?.shoppingLinks?.some(l => l.includes(postId))) {
+            currentDiningAndShopping = { ...currentDiningAndShopping, shoppingLinks: [...(currentDiningAndShopping?.shoppingLinks || []), linkHtml] };
+            shoppingLinksPatched = true;
+          }
+        });
+        if (shoppingLinksPatched) updateDoc(docRef, { diningAndShopping: currentDiningAndShopping });
         setDiningAndShopping(currentDiningAndShopping);
         if (data.flights) setFlights(data.flights);
         
