@@ -76,7 +76,7 @@ function HotelInfo() {
         </p>
         <ul className="info-list" style={{ paddingLeft: '18px', margin: 0 }}>
           {hotel.benefits.map((benefit, idx) => (
-            <li key={idx} style={{ fontSize: '0.9rem', lineHeight: '1.4', marginBottom: '6px' }}>
+            <li key={idx} className={benefit.includes('호텔이용팁') ? 'no-bullet' : undefined} style={{ fontSize: '0.9rem', lineHeight: '1.4', marginBottom: '6px' }}>
               {isAdminMode ? (
                 <div style={{display:'flex', gap:'4px'}}>
                   <input type="text" value={benefit} onChange={e => {

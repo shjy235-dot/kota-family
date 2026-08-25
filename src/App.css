@@ -106,6 +106,13 @@
   position: absolute;
   left: 0;
 }
+.info-list li.no-bullet {
+  padding-left: 0;
+  margin-left: -18px;
+}
+.info-list li.no-bullet::before {
+  content: none;
+}
 
 /* 체크리스트 스타일 */
 .check-item {

@@ -141,7 +141,7 @@ export const TravelProvider = ({ children }) => {
 
         let currentHotel = data.hotel || travelData.hotel;
         // 꼬마기차 이용팁 신규 삽입/스타일 업데이트 패치 (기존 사용자 DB 패치용)
-        const kidsTrainTip = "<span style='display:block; margin-top:8px; padding-top:8px; border-top:1px dashed rgba(0,0,0,0.15);'><strong style='color:var(--ocean-accent);'>호텔이용팁</strong>: 리틀 마젤란에서 <a href='https://kotamania.tistory.com/61' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>꼬마기차</a> 이용 가능</span>";
+        const kidsTrainTip = "<strong style='color:var(--ocean-accent); font-size:0.95rem;'>호텔이용팁</strong>: 리틀 마젤란에서 <a href='https://kotamania.tistory.com/61' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>꼬마기차</a> 이용 가능";
         let hotelPatched = false;
         if (currentHotel?.benefits) {
           if (!currentHotel.benefits.some(b => b.includes('꼬마기차'))) {
