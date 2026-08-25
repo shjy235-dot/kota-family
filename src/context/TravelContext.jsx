@@ -140,15 +140,20 @@ export const TravelProvider = ({ children }) => {
         if (data.tourNotes) setTourNotes(data.tourNotes);
 
         let currentHotel = data.hotel || travelData.hotel;
-        // 꼬마기차 이용팁을 benefits 목록 항목에서 별도 usageTip 필드로 이전하는 패치 (기존 사용자 DB 패치용)
+        // 호텔이용팁을 benefits 목록 항목 → 단일 usageTip 필드 → usageTips 배열로 이전하는 패치 (기존 사용자 DB 패치용)
         const kidsTrainTip = "리틀 마젤란에서 <a href='https://kotamania.tistory.com/61' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>꼬마기차</a> 이용 가능";
         let hotelPatched = false;
         if (currentHotel?.benefits?.some(b => b.includes('꼬마기차'))) {
           currentHotel = { ...currentHotel, benefits: currentHotel.benefits.filter(b => !b.includes('꼬마기차')) };
           hotelPatched = true;
         }
-        if (!currentHotel?.usageTip) {
-          currentHotel = { ...currentHotel, usageTip: kidsTrainTip };
+        if (!currentHotel?.usageTips) {
+          currentHotel = { ...currentHotel, usageTips: currentHotel?.usageTip ? [currentHotel.usageTip] : [kidsTrainTip] };
+          hotelPatched = true;
+        }
+        if (currentHotel.usageTip !== undefined) {
+          const { usageTip, ...rest } = currentHotel;
+          currentHotel = rest;
           hotelPatched = true;
         }
         if (hotelPatched) updateDoc(docRef, { hotel: currentHotel });

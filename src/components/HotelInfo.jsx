@@ -103,15 +103,31 @@ function HotelInfo() {
           <p style={{ fontWeight: '600', fontSize: '0.95rem', color: 'var(--ocean-accent)', marginBottom: '2px' }}>
             호텔이용팁
           </p>
-          {isAdminMode ? (
-            <input type="text" value={hotel.usageTip} onChange={e => updateHotel({...hotel, usageTip: e.target.value})} style={{ width: '100%', padding: '4px', border: '1px solid #ccc', borderRadius: '4px' }} />
-          ) : (
-            <ul className="info-list" style={{ paddingLeft: '18px', margin: 0 }}>
-              <li style={{ fontSize: '0.9rem', lineHeight: '1.4' }}>
-                <span dangerouslySetInnerHTML={{ __html: hotel.usageTip }} />
+          <ul className="info-list" style={{ paddingLeft: '18px', margin: 0 }}>
+            {hotel.usageTips.map((tip, idx) => (
+              <li key={idx} style={{ fontSize: '0.9rem', lineHeight: '1.4', marginBottom: '6px' }}>
+                {isAdminMode ? (
+                  <div style={{display:'flex', gap:'4px'}}>
+                    <input type="text" value={tip} onChange={e => {
+                      const newTips = [...hotel.usageTips];
+                      newTips[idx] = e.target.value;
+                      updateHotel({...hotel, usageTips: newTips});
+                    }} style={{flex:1, padding: '2px', border: '1px solid #ccc', borderRadius: '4px'}} />
+                    <button onClick={() => {
+                      const newTips = [...hotel.usageTips];
+                      newTips.splice(idx, 1);
+                      updateHotel({...hotel, usageTips: newTips});
+                    }} style={{ background: '#e76f51', color: 'white', border: 'none', borderRadius: '4px', padding: '0 8px' }}>삭제</button>
+                  </div>
+                ) : <span dangerouslySetInnerHTML={{ __html: tip }} />}
               </li>
-            </ul>
-          )}
+            ))}
+            {isAdminMode && (
+              <button onClick={() => updateHotel({...hotel, usageTips: [...hotel.usageTips, '새 이용팁']})} style={{ marginTop: '8px', padding: '4px', background: 'var(--ocean-accent)', color: 'white', border: 'none', borderRadius: '4px' }}>
+                + 이용팁 추가
+              </button>
+            )}
+          </ul>
         </div>
       </div>
 

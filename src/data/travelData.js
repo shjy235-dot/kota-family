@@ -49,7 +49,9 @@ const travelData = {
       "해피아워 다과 제공 (17:30 ~ 19:00, 체크아웃 당일 제외)",
       "18시 무료 레이트 체크아웃 적용 완료 (마지막 날)",
     ],
-    usageTip: "리틀 마젤란에서 <a href='https://kotamania.tistory.com/61' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>꼬마기차</a> 이용 가능",
+    usageTips: [
+      "리틀 마젤란에서 <a href='https://kotamania.tistory.com/61' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>꼬마기차</a> 이용 가능",
+    ],
     goldCard: {
       date: "2026년 9월 1일 (화) 사용",
       details: [
