@@ -67,6 +67,15 @@ export const TravelProvider = ({ children }) => {
           currentPacking = currentPacking.map(item => item.task === atmTask ? { ...item, task: atmTaskWithLink } : item);
           packingPatched = true;
         }
+        // 미네랄워터 항목에 참고 링크 강제 업데이트 패치 (기존 사용자 DB 패치용)
+        if (currentPacking.some(item => item.task.includes('미네랄워터') && !item.task.includes('<a href'))) {
+          currentPacking = currentPacking.map(item =>
+            (item.task.includes('미네랄워터') && !item.task.includes('<a href'))
+              ? { ...item, task: item.task.replace('미네랄워터', "<a href='https://blog.naver.com/jyujjnam/223968549834' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>미네랄워터</a>") }
+              : item
+          );
+          packingPatched = true;
+        }
         // 마사지 추천 꿀팁을 준비물 목록에서 제거 (호텔 이용팁으로 이전됨)
         if (currentPacking.some(item => item.task.includes('마사지'))) {
           currentPacking = currentPacking.filter(item => !item.task.includes('마사지'));
