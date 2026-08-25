@@ -51,6 +51,7 @@ const travelData = {
     ],
     usageTips: [
       "리틀 마젤란에서 <a href='https://kotamania.tistory.com/61' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>꼬마기차</a> 이용 가능",
+      "호텔 내부 스파 이용(<a href='https://kotamania.tistory.com/50' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>마사지</a>)",
     ],
     goldCard: {
       date: "2026년 9월 1일 (화) 사용",
@@ -147,8 +148,7 @@ const travelData = {
     ] },
     { category: "기타 꿀팁", items: [
       "현지 천연 미네랄워터 구입 (초록/파란뚜껑 스프리처)",
-      "어린이 스노클링용 일반 마스크",
-      "현지 <a href='https://kotamania.tistory.com/50' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>마사지</a> 추천"
+      "어린이 스노클링용 일반 마스크"
     ] }
   ],
 

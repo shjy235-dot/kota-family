@@ -67,10 +67,9 @@ export const TravelProvider = ({ children }) => {
           currentPacking = currentPacking.map(item => item.task === atmTask ? { ...item, task: atmTaskWithLink } : item);
           packingPatched = true;
         }
-        // 마사지 추천 꿀팁 신규 삽입 패치 (기존 사용자 DB 패치용)
-        const massageTip = "현지 <a href='https://kotamania.tistory.com/50' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>마사지</a> 추천";
-        if (!currentPacking.some(item => item.task.includes('마사지'))) {
-          currentPacking = [...currentPacking, { id: '기타 꿀팁-마사지', category: '기타 꿀팁', task: massageTip, completed: false }];
+        // 마사지 추천 꿀팁을 준비물 목록에서 제거 (호텔 이용팁으로 이전됨)
+        if (currentPacking.some(item => item.task.includes('마사지'))) {
+          currentPacking = currentPacking.filter(item => !item.task.includes('마사지'));
           packingPatched = true;
         }
         if (packingPatched) updateDoc(docRef, { packing: currentPacking });
@@ -162,6 +161,18 @@ export const TravelProvider = ({ children }) => {
         if (currentHotel.usageTip !== undefined) {
           const { usageTip, ...rest } = currentHotel;
           currentHotel = rest;
+          hotelPatched = true;
+        }
+        // 마사지 이용팁에 참고 링크 강제 업데이트 패치 (기존 사용자 DB 패치용, "마사지" 단어만 찾아 링크로 치환)
+        if (currentHotel?.usageTips?.some(t => t.includes('마사지') && !t.includes('<a href'))) {
+          currentHotel = {
+            ...currentHotel,
+            usageTips: currentHotel.usageTips.map(t =>
+              (t.includes('마사지') && !t.includes('<a href'))
+                ? t.replace('마사지', "<a href='https://kotamania.tistory.com/50' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>마사지</a>")
+                : t
+            )
+          };
           hotelPatched = true;
         }
         if (hotelPatched) updateDoc(docRef, { hotel: currentHotel });
