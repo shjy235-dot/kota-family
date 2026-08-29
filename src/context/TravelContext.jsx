@@ -13,6 +13,7 @@ export const TravelProvider = ({ children }) => {
 
   // 개별 상태들
   const [checklist, setChecklist] = useState([]);
+  const [localChecklist, setLocalChecklist] = useState(travelData.localChecklist);
   const [packing, setPacking] = useState([]);
   const [expenses, setExpenses] = useState([]);
 
@@ -57,6 +58,7 @@ export const TravelProvider = ({ children }) => {
         }
         if (checklistPatched) updateDoc(docRef, { checklist: currentChecklist }); // DB 업데이트
         setChecklist(currentChecklist);
+        setLocalChecklist(data.localChecklist || []);
 
         let currentPacking = data.packing || [];
         // ATM기 사용법 항목에 참고 링크 강제 업데이트 패치 (기존 사용자 DB 패치용)
@@ -298,6 +300,7 @@ export const TravelProvider = ({ children }) => {
 
         const initialData = {
           checklist: mergedChecklist,
+          localChecklist: travelData.localChecklist,
           packing: mergedPacking,
           expenses: mergedExpenses,
           itinerary: travelData.itinerary,
@@ -321,6 +324,7 @@ export const TravelProvider = ({ children }) => {
   const updateField = async (field, value) => {
     // 로컬 상태 즉시 반영
     if (field === 'checklist') setChecklist(value);
+    else if (field === 'localChecklist') setLocalChecklist(value);
     else if (field === 'packing') setPacking(value);
     else if (field === 'expenses') setExpenses(value);
     else if (field === 'itinerary') setItinerary(value);
@@ -340,6 +344,7 @@ export const TravelProvider = ({ children }) => {
     <TravelContext.Provider value={{
       isAdminMode, setIsAdminMode,
       checklist, updateChecklist: (v) => updateField('checklist', v),
+      localChecklist, updateLocalChecklist: (v) => updateField('localChecklist', v),
       packing, updatePacking: (v) => updateField('packing', v),
       expenses, updateExpenses: (v) => updateField('expenses', v),
       itinerary, updateItinerary: (v) => updateField('itinerary', v),

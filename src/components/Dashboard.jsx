@@ -5,7 +5,7 @@ import { useTravel } from '../context/TravelContext';
 
 function Dashboard() {
   const [dDay, setDDay] = useState(0);
-  const { checklist, updateChecklist, packing, updatePacking, isLoading, isAdminMode } = useTravel();
+  const { checklist, updateChecklist, localChecklist, updateLocalChecklist, packing, updatePacking, isLoading, isAdminMode } = useTravel();
 
   useEffect(() => {
     // 디데이 계산
@@ -23,6 +23,29 @@ function Dashboard() {
       item.id === id ? { ...item, completed: !item.completed } : item
     );
     updateChecklist(updated);
+  };
+
+  const toggleLocalCheck = (id) => {
+    if (isAdminMode) return;
+    const updated = localChecklist.map(item =>
+      item.id === id ? { ...item, completed: !item.completed } : item
+    );
+    updateLocalChecklist(updated);
+  };
+
+  const updateLocalChecklistText = (id, newText) => {
+    const updated = localChecklist.map(item => item.id === id ? { ...item, task: newText } : item);
+    updateLocalChecklist(updated);
+  };
+
+  const deleteLocalChecklistItem = (id) => {
+    const updated = localChecklist.filter(item => item.id !== id);
+    updateLocalChecklist(updated);
+  };
+
+  const addLocalChecklistItem = () => {
+    const newItem = { id: Date.now(), task: '', completed: false };
+    updateLocalChecklist([...localChecklist, newItem]);
   };
 
   const togglePackingCheck = (id) => {
@@ -89,8 +112,10 @@ function Dashboard() {
         </p>
       </div>
 
-      <div className="glass-card" style={{ marginBottom: '24px', border: isAdminMode ? '2px dashed var(--sunset-accent)' : 'none' }}>
-        <h3 className="section-title">출국 전 필수 체크리스트 ({completedCount}/{checklist.length}) {isAdminMode && <span style={{fontSize:'0.8rem', color:'var(--sunset-accent)'}}>[수정 모드]</span>}</h3>
+      <details className="glass-card" open style={{ marginBottom: '24px', border: isAdminMode ? '2px dashed var(--sunset-accent)' : 'none' }}>
+        <summary className="section-title" style={{ cursor: 'pointer', listStyle: 'none' }}>
+          출국 전 필수 체크리스트 ({completedCount}/{checklist.length}) {isAdminMode && <span style={{fontSize:'0.8rem', color:'var(--sunset-accent)'}}>[수정 모드]</span>}
+        </summary>
         <div className="checklist-container">
           {checklist.map((item) => (
             <div 
@@ -130,7 +155,55 @@ function Dashboard() {
             </button>
           )}
         </div>
-      </div>
+      </details>
+
+      <details className="glass-card" style={{ marginBottom: '24px', border: isAdminMode ? '2px dashed var(--sunset-accent)' : 'none' }}>
+        <summary className="section-title" style={{ cursor: 'pointer', listStyle: 'none' }}>
+          현지 체크리스트 ({localChecklist.filter(c => c.completed).length}/{localChecklist.length}) {isAdminMode && <span style={{fontSize:'0.8rem', color:'var(--sunset-accent)'}}>[수정 모드]</span>}
+        </summary>
+        <div className="checklist-container">
+          {localChecklist.map((item) => (
+            <div
+              key={item.id}
+              className={`check-item ${item.completed ? 'completed' : ''}`}
+              onClick={() => toggleLocalCheck(item.id)}
+              style={{ display: 'flex', alignItems: 'center' }}
+            >
+              {item.completed ? (
+                <CheckCircle2 className="check-icon" size={20} style={{ flexShrink: 0 }} />
+              ) : (
+                <Circle className="check-icon" size={20} style={{ flexShrink: 0 }} />
+              )}
+              {isAdminMode ? (
+                <div style={{ display: 'flex', flex: 1, gap: '8px', marginLeft: '8px' }}>
+                  <input
+                    type="text"
+                    value={item.task}
+                    onChange={(e) => updateLocalChecklistText(item.id, e.target.value)}
+                    style={{ flex: 1, padding: '4px', border: '1px solid #ccc', borderRadius: '4px' }}
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                  <button onClick={(e) => { e.stopPropagation(); deleteLocalChecklistItem(item.id); }} style={{ background: '#e76f51', color: 'white', border: 'none', borderRadius: '4px', padding: '0 8px' }}>삭제</button>
+                </div>
+              ) : (
+                <span
+                  style={{ fontSize: '0.9rem', lineHeight: '1.3' }}
+                  dangerouslySetInnerHTML={{ __html: item.task }}
+                  onClick={(e) => { if (e.target.tagName.toLowerCase() === 'a') e.stopPropagation(); }}
+                />
+              )}
+            </div>
+          ))}
+          {localChecklist.length === 0 && !isAdminMode && (
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>아직 등록된 항목이 없어요. [수정 모드]에서 추가해보세요.</p>
+          )}
+          {isAdminMode && (
+            <button onClick={addLocalChecklistItem} style={{ marginTop: '10px', padding: '6px 12px', background: 'var(--ocean-accent)', color: 'white', border: 'none', borderRadius: '4px', width: '100%' }}>
+              + 새 체크리스트 추가
+            </button>
+          )}
+        </div>
+      </details>
 
       <h2 className="page-title" style={{ marginTop: '32px', display: 'flex', alignItems: 'center', gap: '8px' }}>
         <span className="emoji-float">🧳</span> 짐 챙기기 준비물 목록

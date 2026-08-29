@@ -19,6 +19,9 @@ const travelData = {
     { id: 5, task: "차키 챙기기 (공항 공식 주차대행 발렛 시 필수)", completed: false }
   ],
 
+  // 메인 홈: 현지 체크리스트
+  localChecklist: [],
+
   // 항공편 및 출입국 정보
   flights: {
     outbound: {
