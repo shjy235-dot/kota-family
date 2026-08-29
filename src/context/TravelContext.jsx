@@ -61,10 +61,19 @@ export const TravelProvider = ({ children }) => {
         let currentPacking = data.packing || [];
         // ATM기 사용법 항목에 참고 링크 강제 업데이트 패치 (기존 사용자 DB 패치용)
         const atmTask = "현지 공항 atm기 사용법";
-        const atmTaskWithLink = "현지 공항 atm기 사용법 <a href='https://blog.naver.com/zbxm914/224360088544' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>[참고 링크]</a>";
+        const atmTaskWithLink = "현지 공항 atm기 사용법 <a href='https://blog.naver.com/y86mh/224389033721' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>[참고 링크]</a>";
         let packingPatched = false;
         if (currentPacking.some(item => item.task === atmTask)) {
           currentPacking = currentPacking.map(item => item.task === atmTask ? { ...item, task: atmTaskWithLink } : item);
+          packingPatched = true;
+        }
+        // ATM기 참고 링크 주소 변경 패치 (기존에 이미 붙어있던 구 링크를 새 링크로 교체)
+        if (currentPacking.some(item => item.task.includes('현지 공항 atm기 사용법') && item.task.includes('zbxm914/224360088544'))) {
+          currentPacking = currentPacking.map(item =>
+            (item.task.includes('현지 공항 atm기 사용법') && item.task.includes('zbxm914/224360088544'))
+              ? { ...item, task: atmTaskWithLink }
+              : item
+          );
           packingPatched = true;
         }
         // 미네랄워터 항목에 참고 링크 강제 업데이트 패치 (기존 사용자 DB 패치용)
