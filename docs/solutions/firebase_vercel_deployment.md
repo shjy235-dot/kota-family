@@ -18,3 +18,4 @@
 ## 학습 및 재사용 포인트
 - React에서 Firebase Firestore 실시간 구독 시 Context API를 활용하면 상태 주입이 매우 간결해짐
 - 터미널 접근 권한이 있을 때 `vercel` CLI를 적극 활용하면 GitHub 저장소 생성 단계를 건너뛰고 빠른 결과물 검증(배포)이 가능함
+여기 밑에 호텔 팁

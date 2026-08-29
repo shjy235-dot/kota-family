@@ -104,7 +104,8 @@ export const TravelProvider = ({ children }) => {
           ["08:00 제셀톤 포인트 인근 서브웨이에서 점심 테이크아웃", subwayLine],
           ["08:20 제셀톤 포인트 인근 서브웨이에서 점심 테이크아웃", subwayLine],
           ["08:10 수리아 사바몰(Suria Sabah) 내 서브웨이에서 점심 테이크아웃", subwayLine],
-          ["08:10 제셀톤 스퀘어(Jesselton Square) 내 서브웨이에서 점심 테이크아웃 <a href='http://google.com/maps/search/?api=1&query=Subway%20Jesselton%20Square&query_place_id=ChIJddC6zlhpOzIRwxZRauqldgU' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>[지도 보기]</a>", subwayLine]
+          ["08:10 제셀톤 스퀘어(Jesselton Square) 내 서브웨이에서 점심 테이크아웃 <a href='http://google.com/maps/search/?api=1&query=Subway%20Jesselton%20Square&query_place_id=ChIJddC6zlhpOzIRwxZRauqldgU' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>[지도 보기]</a>", subwayLine],
+          ["08:40 제셀톤 포인트 사우스제티 입구 흰색 천막 미팅 (잔금 RM 1,420 현금 일괄 결제)", "08:40 제셀톤 포인트 사우스제티 입구 흰색 천막 미팅 (잔금 RM 1,440 현금 일괄 결제)"]
         ];
         let itineraryPatched = false;
         itineraryTextPatches.forEach(([oldLine, newLine]) => {
@@ -206,6 +207,7 @@ export const TravelProvider = ({ children }) => {
         if (data.flights) setFlights(data.flights);
         
         let currentBudget = data.budgetStatic || travelData.budget;
+        let budgetPatched = false;
         if (currentBudget?.local?.travelWallet?.title) {
           const title = currentBudget.local.travelWallet.title;
           if (title.includes("트래블월렛") || title.includes("트레블월렛") || title.includes("트래블로그카드")) {
@@ -219,9 +221,28 @@ export const TravelProvider = ({ children }) => {
                 }
               }
             };
-            updateDoc(docRef, { budgetStatic: currentBudget });
+            budgetPatched = true;
           }
         }
+        // 투어 잔금 1,420 RM -> 1,440 RM 확정 및 호텔 보증금(노디파짓 확인) 항목 제거 패치
+        if (currentBudget?.local?.travelWallet?.items) {
+          const items = currentBudget.local.travelWallet.items;
+          const hasOldAmount = items.some(i => i.name?.includes('투어 잔금') && i.amount === '1,420 RM');
+          const hasDepositItem = items.some(i => i.name?.includes('호텔 보증금'));
+          if (hasOldAmount || hasDepositItem) {
+            const newItems = items
+              .filter(i => !i.name?.includes('호텔 보증금'))
+              .map(i => (i.name?.includes('투어 잔금') && i.amount === '1,420 RM') ? { ...i, amount: '1,440 RM' } : i);
+            currentBudget = { ...currentBudget, local: { ...currentBudget.local, travelWallet: { ...currentBudget.local.travelWallet, items: newItems } } };
+            budgetPatched = true;
+          }
+        }
+        // 예산 팁 문구의 투어 잔금 금액 업데이트 패치
+        if (currentBudget?.tips?.some(t => t.includes('1,420 RM'))) {
+          currentBudget = { ...currentBudget, tips: currentBudget.tips.map(t => t.replace('1,420 RM', '1,440 RM')) };
+          budgetPatched = true;
+        }
+        if (budgetPatched) updateDoc(docRef, { budgetStatic: currentBudget });
         setBudgetStatic(currentBudget);
 
         // 환율 정보 로드 (없으면 기본값 360)

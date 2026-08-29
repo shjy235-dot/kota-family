@@ -103,7 +103,7 @@ const travelData = {
       "07:00 래시가드 착용 후 파이브 세일링 조식 뷔페 식사",
       "08:00 그랩 탑승 ➔ 제셀톤 포인트 이동 (약 10분 소요)",
       "08:10 제셀톤 스퀘어(Jesselton Square) 내 <a href='https://blog.naver.com/happy_24h/224207917387' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>서브웨이</a>에서 점심 테이크아웃 <a href='http://google.com/maps/search/?api=1&query=Subway%20Jesselton%20Square&query_place_id=ChIJddC6zlhpOzIRwxZRauqldgU' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>[지도 보기]</a>",
-      "08:40 제셀톤 포인트 사우스제티 입구 흰색 천막 미팅 (잔금 RM 1,420 현금 일괄 결제)",
+      "08:40 제셀톤 포인트 사우스제티 입구 흰색 천막 미팅 (잔금 RM 1,440 현금 일괄 결제)",
       "09:00 대여품 수령 후 보트 탑승 ➔ <a href='https://blog.naver.com/chayalim/223680436707' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>마무틱섬</a> 이동",
       "09:30 ~ 11:50 [마무틱섬] 패러세일링, 제트스키, 단독 가이드 스노클링 진행",
       "12:00 보트 탑승하여 <a href='https://blog.naver.com/chayalim/223477669647' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>사피섬</a>으로 이동",
@@ -236,8 +236,7 @@ const travelData = {
         title: "트레블로그카드 사전 충전 (ATM 인출 + 카드 결제)",
         total: "2,800 RM (약 1,008,000원)",
         items: [
-          { name: "투어 잔금 (현금 필수)", amount: "1,420 RM", desc: "공항 도착 즉시 ATM에서 인출" },
-          { name: "호텔 보증금 (카드 결제)", amount: "600 RM", desc: "퇴실 시 전액 환불 (실지출 제외)" },
+          { name: "투어 잔금 (현금 필수)", amount: "1,440 RM", desc: "공항 도착 즉시 ATM에서 인출" },
           { name: "기타 현지 경비", amount: "약 780 RM", desc: "관광세, 섬 입장료, 그랩, 식비, 쇼핑 등" }
         ]
       },
@@ -250,7 +249,7 @@ const travelData = {
       }
     },
     tips: [
-      "공항 도착 즉시 노란색(Maybank) 또는 빨간색(CIMB) ATM에서 투어 잔금(1,420 RM)을 수수료 없이 인출하세요.",
+      "공항 도착 즉시 노란색(Maybank) 또는 빨간색(CIMB) ATM에서 투어 잔금(1,440 RM)을 수수료 없이 인출하세요.",
       "eSIM 사용자는 한국 유심을 빼지 말고 켜두되, '데이터 로밍'만 OFF로 해두면 한국 문자 수신을 무료로 이용할 수 있습니다."
     ]
   }
