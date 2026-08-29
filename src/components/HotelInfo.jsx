@@ -145,7 +145,7 @@ function HotelInfo() {
               ) : (
                 <>
                   <h4 style={{ color: 'var(--text-main)', marginBottom: '2px', fontSize: '0.95rem' }}>{place.name}</h4>
-                  <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{place.desc}</p>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }} dangerouslySetInnerHTML={{ __html: place.desc }} />
                 </>
               )}
             </div>

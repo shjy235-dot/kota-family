@@ -228,6 +228,18 @@ export const TravelProvider = ({ children }) => {
           }
         });
         if (shoppingLinksPatched) updateDoc(docRef, { diningAndShopping: currentDiningAndShopping });
+        // 골드카드 세트 맛집 항목의 "링크참고" 설명에 실제 참고 링크 연결 패치 (기존 사용자 DB 패치용)
+        if (currentDiningAndShopping?.dining?.some(d => d.name === '골드카드 세트' && d.desc === '링크참고')) {
+          currentDiningAndShopping = {
+            ...currentDiningAndShopping,
+            dining: currentDiningAndShopping.dining.map(d =>
+              (d.name === '골드카드 세트' && d.desc === '링크참고')
+                ? { ...d, desc: "<a href='https://blog.naver.com/suteraharbour_korea/224369027352' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>링크참고</a>" }
+                : d
+            )
+          };
+          updateDoc(docRef, { diningAndShopping: currentDiningAndShopping });
+        }
         setDiningAndShopping(currentDiningAndShopping);
         if (data.flights) setFlights(data.flights);
         
