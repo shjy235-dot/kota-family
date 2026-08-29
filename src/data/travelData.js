@@ -92,7 +92,7 @@ const travelData = {
   itinerary: [
     { day: "Day 1 (8/30 일)", title: "출발 & 주차대행 하차 & 출국", schedule: [
       "12:30 대전 용운동 에코포레 아파트 출발 (휴게소 방문 감안)",
-      "16:00 인천공항 제1터미널 단기주차장 지하 1층(B1) A구역 15번 공식 주차대행 접수장 하차",
+      "16:00 인천공항 제1터미널 단기주차장 지하 1층(B1) A구역 15번 공식 <a href='https://maxerve-mparking.com/valet/' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>주차대행</a> 접수장 하차",
       "16:10 엘리베이터 탑승 후 3층 출국장 이동",
       "16:30 사전 모바일 체크인 QR 준비 후 L카운터 셀프 백드롭 기기로 수하물 직접 위탁",
       "17:00 스마트패스 전용 라인으로 보안검색대 빠른 통과",

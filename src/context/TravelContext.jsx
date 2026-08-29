@@ -104,10 +104,12 @@ export const TravelProvider = ({ children }) => {
         const breakfastLine = "07:00 래시가드 착용 후 파이브 세일링 조식 뷔페 식사";
         const subwayLine = "08:10 제셀톤 스퀘어(Jesselton Square) 내 <a href='https://blog.naver.com/happy_24h/224207917387' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>서브웨이</a>에서 점심 테이크아웃 <a href='http://google.com/maps/search/?api=1&query=Subway%20Jesselton%20Square&query_place_id=ChIJddC6zlhpOzIRwxZRauqldgU' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>[지도 보기]</a>";
         const grabLine = "08:00 그랩 탑승 ➔ 제셀톤 포인트 이동 (약 10분 소요)";
+        const parkingValetLine = "16:00 인천공항 제1터미널 단기주차장 지하 1층(B1) A구역 15번 공식 <a href='https://maxerve-mparking.com/valet/' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>주차대행</a> 접수장 하차";
         const itineraryTextPatches = [
           ["17:30 시내 이동 ➔ 웰컴 씨푸드 저녁 식사 및 필리피노 야시장 구경", soldOutDinnerLine],
           ["17:30 시내 이동 ➔ 이마고몰 투어 및 솔드아웃 저녁 식사", soldOutDinnerLine],
-          ["16:00 인천공항 제1터미널 단기주차장 지하 1층(C구역) 공식 주차대행 접수장 하차", "16:00 인천공항 제1터미널 단기주차장 지하 1층(B1) A구역 15번 공식 주차대행 접수장 하차"],
+          ["16:00 인천공항 제1터미널 단기주차장 지하 1층(C구역) 공식 주차대행 접수장 하차", parkingValetLine],
+          ["16:00 인천공항 제1터미널 단기주차장 지하 1층(B1) A구역 15번 공식 주차대행 접수장 하차", parkingValetLine],
           ["07:50 단기주차장 지하 1층 주차대행 정산소 이동 (다자녀 할인 정산)", "07:50 단기주차장 지하 3층 A정산소(A32구역) 또는 H정산소(H38구역) 이동"],
           ["07:30 래시가드 착용 후 파이브 세일링 조식 뷔페 식사", breakfastLine],
           ["08:15 그랩 탑승 ➔ 제셀톤 포인트 이동", grabLine],
