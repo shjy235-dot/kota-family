@@ -96,7 +96,7 @@ const travelData = {
       "16:10 엘리베이터 탑승 후 3층 출국장 이동",
       "16:30 사전 모바일 체크인 QR 준비 후 L카운터 셀프 백드롭 기기로 수하물 직접 위탁",
       "17:00 스마트패스 전용 라인으로 보안검색대 빠른 통과",
-      "17:30 ~ 18:30 면세구역 식사 및 탑승게이트 대기",
+      "17:30 ~ 18:30 <a href='https://blog.naver.com/yase90/224378880969' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>고메브릿지(12번게이트 4층)</a> 식사 및 탑승게이트 대기",
       "19:10 인천국제공항 출발 (제주항공 7C2603)",
       "23:30 코타키나발루 국제공항(BKI) 도착 및 입국 심사",
       "23:50 그랩(Grab) 탑승하여 더 마젤란 수트라 리조트 이동",
