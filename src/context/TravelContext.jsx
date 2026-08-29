@@ -163,7 +163,18 @@ export const TravelProvider = ({ children }) => {
         if (itineraryPatched) updateDoc(docRef, { itinerary: currentItinerary });
         setItinerary(currentItinerary);
         if (data.tours) setTours(data.tours);
-        if (data.tourNotes) setTourNotes(data.tourNotes);
+        // 결제 및 준비사항에 섬 입장료 상세 금액 추가 패치 (기존 사용자 DB 패치용)
+        let currentTourNotes = data.tourNotes || travelData.tourNotes;
+        const paymentCategory = currentTourNotes.find(c => c.category?.includes('결제 및 준비사항'));
+        if (paymentCategory && !paymentCategory.items.some(i => i.includes('섬 입장료: 성인'))) {
+          currentTourNotes = currentTourNotes.map(c =>
+            c.category?.includes('결제 및 준비사항')
+              ? { ...c, items: [...c.items.slice(0, 2), "섬 입장료: 성인 25 RM × 2명 + 아동 20 RM × 2명 = **총 90 RM**", ...c.items.slice(2)] }
+              : c
+          );
+          updateDoc(docRef, { tourNotes: currentTourNotes });
+        }
+        setTourNotes(currentTourNotes);
 
         let currentHotel = data.hotel || travelData.hotel;
         // 호텔이용팁을 benefits 목록 항목 → 단일 usageTip 필드 → usageTips 배열로 이전하는 패치 (기존 사용자 DB 패치용)
