@@ -113,8 +113,9 @@ function Dashboard() {
       </div>
 
       <details className="glass-card" open style={{ marginBottom: '24px', border: isAdminMode ? '2px dashed var(--sunset-accent)' : 'none' }}>
-        <summary className="section-title" style={{ cursor: 'pointer', listStyle: 'none' }}>
-          출국 전 필수 체크리스트 ({completedCount}/{checklist.length}) {isAdminMode && <span style={{fontSize:'0.8rem', color:'var(--sunset-accent)'}}>[수정 모드]</span>}
+        <summary className="section-title" style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', listStyle: 'none' }}>
+          <span>출국 전 필수 체크리스트 ({completedCount}/{checklist.length}) {isAdminMode && <span style={{fontSize:'0.8rem', color:'var(--sunset-accent)'}}>[수정 모드]</span>}</span>
+          <span style={{ marginLeft: 'auto', fontSize: '0.8rem', color: 'var(--text-muted)' }}>자세히 보기 ▼</span>
         </summary>
         <div className="checklist-container">
           {checklist.map((item) => (
@@ -158,8 +159,9 @@ function Dashboard() {
       </details>
 
       <details className="glass-card" style={{ marginBottom: '24px', border: isAdminMode ? '2px dashed var(--sunset-accent)' : 'none' }}>
-        <summary className="section-title" style={{ cursor: 'pointer', listStyle: 'none' }}>
-          현지 체크리스트 ({localChecklist.filter(c => c.completed).length}/{localChecklist.length}) {isAdminMode && <span style={{fontSize:'0.8rem', color:'var(--sunset-accent)'}}>[수정 모드]</span>}
+        <summary className="section-title" style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', listStyle: 'none' }}>
+          <span>현지 체크리스트 ({localChecklist.filter(c => c.completed).length}/{localChecklist.length}) {isAdminMode && <span style={{fontSize:'0.8rem', color:'var(--sunset-accent)'}}>[수정 모드]</span>}</span>
+          <span style={{ marginLeft: 'auto', fontSize: '0.8rem', color: 'var(--text-muted)' }}>자세히 보기 ▼</span>
         </summary>
         <div className="checklist-container">
           {localChecklist.map((item) => (
