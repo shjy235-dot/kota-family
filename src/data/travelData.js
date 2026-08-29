@@ -99,7 +99,7 @@ const travelData = {
       "17:30 ~ 18:30 <a href='https://blog.naver.com/yase90/224378880969' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>고메브릿지(12번게이트 4층)</a> 식사 및 탑승게이트 대기",
       "19:10 인천국제공항 출발 (제주항공 7C2603)",
       "23:30 코타키나발루 국제공항(BKI) 도착 및 입국 심사",
-      "23:50 그랩(Grab) 탑승하여 더 마젤란 수트라 리조트 이동",
+      "23:50 <a href='/grab-pickup-day1.png' target='_blank' rel='noreferrer' style='color:var(--ocean-accent); text-decoration:underline; font-weight:600;'>그랩(Grab)</a> 탑승하여 더 마젤란 수트라 리조트 이동",
       "24:10 리조트 체크인 및 휴식 (골드카드 등록 및 식당 예약)"
     ] },
     { day: "Day 2 (8/31 월)", title: "2개 섬 호핑투어(마무틱&사피) & 시내 맛집", schedule: [

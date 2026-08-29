@@ -9,7 +9,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
       workbox: {
-        navigateFallbackDenylist: [/\.pdf$/]
+        navigateFallbackDenylist: [/\.pdf$/, /\.(png|jpe?g|gif|webp)$/]
       },
       manifest: {
         name: '코타키나발루 가족 여행 가이드',
