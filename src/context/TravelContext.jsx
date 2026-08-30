@@ -10,6 +10,7 @@ export const useTravel = () => useContext(TravelContext);
 export const TravelProvider = ({ children }) => {
   const [isAdminMode, setIsAdminMode] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [syncError, setSyncError] = useState(null);
 
   // 개별 상태들
   const [checklist, setChecklist] = useState([]);
@@ -331,6 +332,11 @@ export const TravelProvider = ({ children }) => {
 
         await setDoc(docRef, initialData);
       }
+    }, (error) => {
+      // Firestore 접속 실패 시(권한 오류 등) 무한 "동기화 중" 방지
+      console.error('Firestore 동기화 오류:', error);
+      setSyncError(error.message || String(error));
+      setIsLoading(false);
     });
 
     return () => unsubscribe();
@@ -371,7 +377,7 @@ export const TravelProvider = ({ children }) => {
       flights, updateFlights: (v) => updateField('flights', v),
       budgetStatic, updateBudgetStatic: (v) => updateField('budgetStatic', v),
       exchangeRate, updateExchangeRate: (v) => updateField('exchangeRate', v),
-      isLoading
+      isLoading, syncError
     }}>
       {children}
     </TravelContext.Provider>

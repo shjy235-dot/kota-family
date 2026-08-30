@@ -8,7 +8,7 @@ function BudgetGuide() {
     expenses, updateExpenses,
     budgetStatic, updateBudgetStatic,
     exchangeRate, updateExchangeRate,
-    isAdminMode, isLoading
+    isAdminMode, isLoading, syncError
   } = useTravel();
 
   // 환율 편집용 로컬 상태
@@ -131,6 +131,7 @@ function BudgetGuide() {
   };
 
   if (isLoading) return <div style={{textAlign:'center', padding:'50px'}}>데이터 동기화 중...</div>;
+  if (syncError) return <div style={{textAlign:'center', padding:'50px', color:'#e76f51'}}>데이터를 불러오지 못했어요.<br/>네트워크 상태를 확인하거나 잠시 후 다시 시도해주세요.</div>;
 
   if (!budgetStatic) return null;
 

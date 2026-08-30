@@ -5,7 +5,7 @@ import { useTravel } from '../context/TravelContext';
 
 function Dashboard() {
   const [dDay, setDDay] = useState(0);
-  const { checklist, updateChecklist, localChecklist, updateLocalChecklist, packing, updatePacking, isLoading, isAdminMode } = useTravel();
+  const { checklist, updateChecklist, localChecklist, updateLocalChecklist, packing, updatePacking, isLoading, syncError, isAdminMode } = useTravel();
 
   useEffect(() => {
     // 디데이 계산
@@ -87,6 +87,7 @@ function Dashboard() {
   };
 
   if (isLoading) return <div style={{textAlign:'center', padding:'50px'}}>데이터 동기화 중...</div>;
+  if (syncError) return <div style={{textAlign:'center', padding:'50px', color:'#e76f51'}}>데이터를 불러오지 못했어요.<br/>네트워크 상태를 확인하거나 잠시 후 다시 시도해주세요.</div>;
 
   const completedCount = checklist.filter(c => c.completed).length;
 
